@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Jovan Ristic Fit App</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="button_connect">Connect</string>
+    <string name="button_disconnect">Disconnect</string>
+    <string name="title_devices">Devices</string>
+    <string name="action_settings">Settings</string>
+    <string name="scan">Scan</string>
+    <string name="stopScan">Stop Scanning</string>
+
+    <string name="yourPhoneDoesNotSupportBluetoothText">Your phone does not support Bluetooth</string>
+    <string name="bluetoothIsTurnedOffText">Bluetooth is off</string>
+    <string name="bluetoothIsTurnedOnText">Bluetooth is on</string>
+
+    <string name="connectionSuccessfulText">Connection successful</string>
+    <string name="connectionErrorText">Connection error</string>
+
+    <string name="tapToScanText">Tap to scan</string>
+    <string name="scanningInProgressText">Scanning in progress</string>
+    <string name="connectingInProgressText">Connecting in progress</string>
+    <string name="pairingInProgressText">Pairing in progress</string>
+    <string name="scanningSuccessfulText">Scanning successful</string>
+    <string name="pairingSuccessfulText">Pairing successful</string>
+    <string name="pairDeviceText">Pair device</string>
+
+
+</resources>
