@@ -164,9 +164,11 @@ internal class BluetoothIO(private val listener: BluetoothListener?) : Bluetooth
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
-
+        println("bluetoothGatt state onConnectionStateChange 1 = $newState")
         if (newState == BluetoothProfile.STATE_CONNECTED) {
+            bluetoothGatt = gatt
             gatt.discoverServices()
+            println("bluetoothGatt state onConnectionStateChange 2 = ${bluetoothGatt != null}")
         } else {
             gatt.close()
             listener?.onDisconnected()

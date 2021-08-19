@@ -16,6 +16,8 @@ object Profile {
      */
     val UUID_SERVICE_MILI = UUID.fromString("0000fee0-0000-1000-8000-00805f9b34fb")
 
+    val UUID_SERVICE_BATTERY = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb")
+
     /**
      * Vibration service
      */
@@ -71,7 +73,8 @@ object Profile {
     /**
      * Used for getting batter info
      */
-    val UUID_CHAR_BATTERY = UUID.fromString("0000ff0c-0000-1000-8000-00805f9b34fb")
+//    val UUID_CHAR_BATTERY = UUID.fromString("0000ff0c-0000-1000-8000-00805f9b34fb")
+    val UUID_CHAR_BATTERY = UUID.fromString("00002a19-0000-1000-8000-00805f9b34fb")
 
     /**
      * Used for fetching sensor data

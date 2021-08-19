@@ -24,4 +24,10 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
+    companion object {
+        const val BROADCAST_DETECTED_ACTIVITY = "activity_intent"
+        const val DETECTION_INTERVAL_IN_MILLISECONDS: Long = 5000
+        const val CONFIDENCE = 70
+    }
 }

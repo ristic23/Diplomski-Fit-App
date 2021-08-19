@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fit.diplomski.app.databinding.DeviceListItemBinding
 import java.util.ArrayList
 
-class BluetoothListAdapter(private val dataSet: ArrayList<BluetoothDevice>) : RecyclerView.Adapter<BluetoothListAdapter.ViewHolder>()
+class BluetoothListAdapter(private var dataSet: ArrayList<BluetoothDevice>) : RecyclerView.Adapter<BluetoothListAdapter.ViewHolder>()
 {
     interface BluetoothDeviceClickInterface
     {
@@ -19,6 +19,12 @@ class BluetoothListAdapter(private val dataSet: ArrayList<BluetoothDevice>) : Re
     fun setBluetoothDeviceClickInterface(bluetoothDeviceClickInterface: BluetoothDeviceClickInterface)
     {
         this.bluetoothDeviceClickInterface = bluetoothDeviceClickInterface
+    }
+
+    public fun setList(dataSet: ArrayList<BluetoothDevice>)
+    {
+        this.dataSet = dataSet
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,7 +39,8 @@ class BluetoothListAdapter(private val dataSet: ArrayList<BluetoothDevice>) : Re
         viewHolder.itemBinding.macAddress.text = btDataItem.address
 
         viewHolder.itemBinding.root.setOnClickListener {
-            bluetoothDeviceClickInterface.bluetoothDeviceOnClick(dataSet[position])
+            if(bluetoothDeviceClickInterface != null)
+                bluetoothDeviceClickInterface.bluetoothDeviceOnClick(dataSet[position])
         }
     }
 

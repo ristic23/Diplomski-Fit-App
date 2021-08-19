@@ -2,6 +2,7 @@ package com.khmelenko.lab.miband
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -19,7 +20,7 @@ import java.util.*
 
  * @author Dmytro Khmelenko
  */
-class MiBand(private val context: Context) : BluetoothListener {
+class MiBand(private val context: Context, private val batteryCallback: (level:Int)->Unit) : BluetoothListener {
 
     private val bluetoothIo: BluetoothIO = BluetoothIO(this)
 
@@ -148,7 +149,7 @@ class MiBand(private val context: Context) : BluetoothListener {
     val batteryInfo: Observable<BatteryInfo>
         get() = Observable.create<BatteryInfo> { subscriber ->
             batteryInfoSubject.subscribe(ObserverWrapper(subscriber))
-            bluetoothIo.readCharacteristic(Profile.UUID_SERVICE_MILI, Profile.UUID_CHAR_BATTERY)
+            bluetoothIo.readCharacteristic(Profile.UUID_SERVICE_BATTERY, Profile.UUID_CHAR_BATTERY)
         }
 
     /**
@@ -351,7 +352,8 @@ class MiBand(private val context: Context) : BluetoothListener {
     override fun onResult(data: BluetoothGattCharacteristic) {
         val serviceId = data.service.uuid
         val characteristicId = data.uuid
-        if (serviceId == Profile.UUID_SERVICE_MILI) {
+        if (serviceId == Profile.UUID_SERVICE_MILI)
+        {
 
             // pair
             if (characteristicId == Profile.UUID_CHAR_PAIR) {
@@ -362,19 +364,6 @@ class MiBand(private val context: Context) : BluetoothListener {
                     pairSubject.onComplete()
                 }
                 pairSubject = PublishSubject.create()
-            }
-
-            // Battery info
-            if (characteristicId == Profile.UUID_CHAR_BATTERY) {
-                if (data.value.size == 10) {
-                    val info = BatteryInfo.fromByteData(data.value)
-
-                    batteryInfoSubject.onNext(info)
-                    batteryInfoSubject.onComplete()
-                } else {
-                    batteryInfoSubject.onError(Exception("Wrong data format for battery info"))
-                }
-                batteryInfoSubject = PublishSubject.create()
             }
 
             // Pair
@@ -436,6 +425,24 @@ class MiBand(private val context: Context) : BluetoothListener {
                 userInfoSubject = PublishSubject.create()
             }
         }
+
+
+        // Battery info
+        if (characteristicId == Profile.UUID_CHAR_BATTERY)
+        {
+            batteryCallback(data.value[0].toInt())
+//            val info = BatteryInfo.fromByteData(data.value)
+//            if ((0 .. 100).contains(info as Int)) {
+//                println("Battery lvl = {$info}")
+//
+//                batteryInfoSubject.onNext(info)
+//                batteryInfoSubject.onComplete()
+//            } else {
+//                batteryInfoSubject.onError(Exception("Wrong data format for battery info"))
+//            }
+//            batteryInfoSubject = PublishSubject.create()
+        }
+
 
         // vibration service
         if (serviceId == Profile.UUID_SERVICE_VIBRATION) {
