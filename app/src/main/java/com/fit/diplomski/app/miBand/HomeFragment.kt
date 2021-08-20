@@ -1,4 +1,4 @@
-package com.fit.diplomski.app.ui.home
+package com.fit.diplomski.app.miBand
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
@@ -6,10 +6,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothDevice.ACTION_UUID
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
-import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,7 +14,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.ParcelUuid
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -29,24 +24,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.fit.diplomski.app.ApplicationClass
 import com.fit.diplomski.app.R
-import com.fit.diplomski.app.bluetooth.adapter.BluetoothListAdapter
 import com.fit.diplomski.app.databinding.FragmentHomeBinding
 import com.khmelenko.lab.miband.MiBand
-import com.khmelenko.lab.miband.model.Profile
-import java.lang.reflect.Method
 import java.util.*
 
-class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterface, LocationListener
+class HomeFragment : Fragment(), MiBandsListAdapter.BluetoothDeviceClickInterface, LocationListener
 {
     private var homeBinding: FragmentHomeBinding? = null
     private val viewBinding get() = homeBinding!!
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory((requireContext().applicationContext as ApplicationClass).repository)
+    }
 
-    private lateinit var scanningCountDownTimer: CountDownTimer
+    private var scanningCountDownTimer: CountDownTimer? = null
 
     private var btAdapter: BluetoothAdapter? = null
 
@@ -57,7 +52,9 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
 
     private lateinit var mActivity: AppCompatActivity
     private lateinit var mContext: Context
-    private lateinit var deviceAdapter :BluetoothListAdapter
+    private lateinit var deviceAdapter : MiBandsListAdapter
+
+    private lateinit var device: BluetoothDevice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,76 +62,55 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
         if(activity is AppCompatActivity)
             mActivity = activity as AppCompatActivity
 
+        locationManager = mActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        deviceAdapter = MiBandsListAdapter(ArrayList())
+        deviceAdapter.setBluetoothDeviceClickInterface(this)
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         homeBinding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        locationManager = mActivity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        checkLocationPermission()
+        return viewBinding.root
+    }
 
-        btAdapter = BluetoothAdapter.getDefaultAdapter()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         if (btAdapter == null) {
             viewBinding.btIconState.setImageResource(android.R.drawable.stat_notify_error)
             viewBinding.btTextMsg.text = getString(R.string.yourPhoneDoesNotSupportBluetoothText)
             viewBinding.btSwitch.visibility = View.GONE
+            viewBinding.miBandHolder.visibility = View.GONE
         }
         else
         {
-            scanningCountDownTimer = object : CountDownTimer(10,10)
-            {
-                override fun onTick(millisUntilFinished: Long) {
-
-                }
-
-                override fun onFinish() {
-                }
-            }.start()
-
-            deviceAdapter = BluetoothListAdapter(ArrayList())
-            deviceAdapter.setBluetoothDeviceClickInterface(this)
-
             viewBinding.bluetoothDevicesRV.apply {
                 adapter = deviceAdapter
                 layoutManager = LinearLayoutManager(mActivity)
             }
-//        viewBinding.bluetoothDevicesRV.visibility = View.GONE
 
             viewBinding.btSwitch.isChecked = btAdapter?.isEnabled == true
-            if (viewBinding.btSwitch.isChecked) {
-                viewBinding.btTextMsg.text = getString(R.string.bluetoothIsTurnedOnText)
-                viewBinding.scanCardView.visibility = View.VISIBLE
-//                getBluetoothDevices()
-            }
-            else {
+            if (!viewBinding.btSwitch.isChecked)
+            {
                 viewBinding.btTextMsg.text = getString(R.string.bluetoothIsTurnedOffText)
                 viewBinding.btIconState.alpha = 0.5f
                 viewBinding.scanCardView.visibility = View.GONE
                 deviceAdapter.setList(ArrayList<BluetoothDevice>())
             }
-
-            viewBinding.btIconState.setImageResource(android.R.drawable.stat_sys_data_bluetooth)
-
-            viewBinding.btSwitch.setOnClickListener{
-                if(viewBinding.btSwitch.isChecked) {
-//                    turnOnBluetooth()
-                    viewBinding.btTextMsg.text = getString(R.string.bluetoothIsTurnedOnText)
-                    viewBinding.btIconState.alpha = 1f
-                    viewBinding.scanCardView.visibility = View.VISIBLE
-                }
-                else
-                {
-                    btAdapter?.disable()
-                    viewBinding.btTextMsg.text = getString(R.string.bluetoothIsTurnedOffText)
-                    viewBinding.btIconState.alpha = 0.5f
-                    viewBinding.scanCardView.visibility = View.GONE
-                    deviceAdapter.setList(ArrayList<BluetoothDevice>())
-                }
-            }
+            else
+                getBluetoothDevices()
         }
 
+        onClickListeners()
+    }
+
+    private fun onClickListeners()
+    {
         viewBinding.pairCardView.setOnClickListener {
 //            pairDevice()
             val d = miBand.batteryInfo
@@ -143,17 +119,129 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
         }
 
         viewBinding.scanCardView.setOnClickListener {
-            if(!homeViewModel.isScanRunning)
                 startScanningForDevice()
-            else
-                connectDevice()
         }
 
-        return viewBinding.root
+        viewBinding.btSwitch.setOnClickListener{
+            if(viewBinding.btSwitch.isChecked) {
+                turnOnBluetooth()
+                viewBinding.btTextMsg.text = getString(R.string.bluetoothIsTurnedOnText)
+                viewBinding.btIconState.alpha = 1f
+                viewBinding.scanCardView.visibility = View.VISIBLE
+            }
+        }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (ContextCompat.checkSelfPermission(mActivity, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, 400, 1f, this)
+        }
+        else
+            checkLocationPermission()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (ContextCompat.checkSelfPermission(mActivity, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.removeUpdates(this)
+        }
+    }
+
+    private fun startScanningForDevice() {
+        if(homeViewModel.isScanRunning)
+            return
+        homeViewModel.isScanRunning = true
+        homeViewModel.scanProgress = 0
+        updateScanProgress()
+        val seconds = 60L
+        val duration = seconds * 1000
+        viewBinding.habitProgressBar.max = seconds.toInt()
+        scanningCountDownTimer = object : CountDownTimer(duration, 1000)
+        {
+            override fun onTick(millisUntilFinished: Long) {
+                updateScanProgress()
+            }
+
+            override fun onFinish() {
+                if(homeViewModel.isScanRunning)
+                {
+                    miBand.stopScan()
+                    viewBinding.scanTextMsg.text = getString(R.string.tapToScanText)
+                }
+                resetScan()
+                viewBinding.scanTextMsg.text = getString(R.string.scanningFinishedText)
+            }
+        }.start()
+        viewBinding.scanTextMsg.text = getString(R.string.scanningInProgressText)
+        val d = miBand.startScan().subscribe { result ->
+            val tempList = ArrayList(deviceAdapter.getList())
+            tempList.add(result.device)
+            deviceAdapter.setList(tempList)
+        }
+    }
+
+    private fun connectDevice(pickedDevice: BluetoothDevice)
+    {
+        device = pickedDevice
+        miBand.stopScan()
+        val d = miBand.connect(device).subscribe(
+            { connected ->
+                if (connected) {
+                    viewBinding.pairCardView.post {
+                        viewBinding.pairCardView.visibility = View.VISIBLE
+                    }
+                    Toast.makeText(
+                        mActivity,
+                        getString(R.string.connectionSuccessfulText),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        mActivity,
+                        getString(R.string.connectionErrorText),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            {
+                it.printStackTrace()
+                Toast.makeText(
+                    mActivity,
+                    getString(R.string.connectionErrorText),
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
+    }
+
+    //todo 21.08.2021. vidi napravi view u gornjem uglu koji ima da oznacava stanje aplikacije i mi band narukvice
+
+    private fun updateScanProgress()
+    {
+        homeViewModel.scanProgress++
+        viewBinding.habitProgressBar.progress = homeViewModel.scanProgress
+        Log.v("ScanningProgressLog", "Progress = ${viewBinding.habitProgressBar.progress}")
+    }
+
+    private fun resetScan()
+    {
+        homeViewModel.isScanRunning = false
+        homeViewModel.scanProgress = -1
+        updateScanProgress()
+    }
+
+    override fun bluetoothDeviceOnClick(bluetoothDeviceItem: BluetoothDevice) {
+        connectDevice(bluetoothDeviceItem)
+        viewBinding.scanCardView.visibility = View.GONE
+        viewBinding.bluetoothDevicesRV.visibility = View.GONE
+        Toast.makeText(mActivity, getString(R.string.connectingInProgressText), Toast.LENGTH_SHORT).show()
+    }
+
+    //region Bluetooth
 
     private fun getBluetoothDevices()
     {
+        viewBinding.bluetoothCardView.visibility = View.GONE
         val deviceItemList = ArrayList<BluetoothDevice>()
         val pairedDevices = btAdapter?.bondedDevices
         if (pairedDevices?.size!! > 0) {
@@ -174,117 +262,7 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
         bluetoothOnResult.launch(enableBT)
     }
 
-    lateinit var device: BluetoothDevice
-    private fun startScanningForDevice() {
-        if(homeViewModel.isScanRunning)
-            return
-        homeViewModel.isScanRunning = true
-        homeViewModel.scanProgress = 0
-        updateScanProgress()
-        val seconds = 45L
-        val duration = seconds * 1000
-        viewBinding.habitProgressBar.max = seconds.toInt()
-        scanningCountDownTimer = object : CountDownTimer(duration, 1000)
-        {
-            override fun onTick(millisUntilFinished: Long) {
-                updateScanProgress()
-            }
-
-            override fun onFinish() {
-                if(homeViewModel.isScanRunning)
-                {
-                    miBand.stopScan()
-                    viewBinding.scanTextMsg.text = getString(R.string.tapToScanText)
-                }
-                resetScan()
-            }
-        }.start()
-        viewBinding.scanTextMsg.text = getString(R.string.scanningInProgressText)
-        val d = miBand.startScan().subscribe { result ->
-//            homeViewModel.isScanRunning = false
-            device = result.device
-            viewBinding.scanTextMsg.text = getString(R.string.scanningSuccessfulText)
-            Log.v("ScanningProgressLog", getString(R.string.connectingInProgressText))
-            val tempList = ArrayList<BluetoothDevice>()
-            tempList.add(device)
-            deviceAdapter.setList(tempList)
-            val filter = ScanFilter.Builder().setServiceUuid(
-                ParcelUuid.fromString(Profile.UUID_SERVICE_MILI.toString())
-            ).build()
-            connectDevice()
-//            miBand.stopScan()
-            scanningCountDownTimer.cancel()
-            resetScan()
-        }
-
-    }
-
-    private fun connectDevice()
-    {
-        val d = miBand.connect(device).subscribe { connected ->
-            if (connected) {
-                viewBinding.scanTextMsg.text = getString(R.string.connectionSuccessfulText)
-                Log.v("ScanningProgressLog", getString(R.string.connectionSuccessfulText))
-                viewBinding.pairCardView.post {
-                    viewBinding.pairCardView.visibility = View.VISIBLE
-                }
-            } else {
-                viewBinding.scanTextMsg.text = getString(R.string.connectionErrorText)
-                Log.v("ScanningProgressLog", getString(R.string.connectionErrorText))
-            }
-        }
-    }
-
-    private fun pairDevice()
-    {
-        viewBinding.pairTextMsg.text = getString(R.string.pairingInProgressText)
-        val d = miBand.pair().subscribe(
-            {
-                viewBinding.scanCardView.post {
-                    viewBinding.scanCardView.visibility = View.GONE
-                }
-                viewBinding.pairTextMsg.text = getString(R.string.pairingSuccessfulText)
-            },
-            {
-                it.printStackTrace()
-                viewBinding.pairTextMsg.text = it.message
-            }
-        )
-    }
-
-    private fun updateScanProgress()
-    {
-        homeViewModel.scanProgress++
-        viewBinding.habitProgressBar.progress = homeViewModel.scanProgress
-        Log.v("ScanningProgressLog", "Progress = ${viewBinding.habitProgressBar.progress}")
-    }
-
-    private fun resetScan()
-    {
-        homeViewModel.isScanRunning = false
-        homeViewModel.scanProgress = -1
-        updateScanProgress()
-    }
-
-    override fun onDestroy() {
-        miBand.stopScan()
-        scanningCountDownTimer.cancel()
-        super.onDestroy()
-    }
-
-    override fun bluetoothDeviceOnClick(bluetoothDeviceItem: BluetoothDevice) {
-//        bluetoothDeviceItem.address = "D3:D0:65:39:87:57"
-//        val bt = BluetoothDevice("D3:D0:65:39:87:57")
-//        connectDevice(bluetoothDeviceItem)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-        miBand = MiBand(requireContext().applicationContext) {
-            viewBinding.scanTextMsg.text = "battery info = $it"
-        }
-    }
+    //endregion
 
     //region Location
 
@@ -303,7 +281,8 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
                     .setPositiveButton("OK") { _, i ->
                         //Prompt the user once explanation has been shown
                         ActivityCompat.requestPermissions(mActivity,
-                            arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_LOCATION)
+                            arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_LOCATION
+                        )
                     }
                     .create()
                     .show()
@@ -327,20 +306,6 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
                         Toast.LENGTH_SHORT).show()
                 }
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (ContextCompat.checkSelfPermission(mActivity, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(provider, 400, 1f, this)
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (ContextCompat.checkSelfPermission(mActivity, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.removeUpdates(this)
         }
     }
 
@@ -368,4 +333,18 @@ class HomeFragment : Fragment(), BluetoothListAdapter.BluetoothDeviceClickInterf
 
     //endregion
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+        miBand = MiBand(requireContext().applicationContext) {
+            viewBinding.scanTextMsg.text = "battery info = $it"
+        }
+    }
+
+    override fun onDestroy() {
+        miBand.stopScan()
+        if(scanningCountDownTimer != null)
+            scanningCountDownTimer?.cancel()
+        super.onDestroy()
+    }
 }

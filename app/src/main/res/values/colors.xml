@@ -11,4 +11,6 @@
 
     <color name="bluetoothCardBgColor">#323232</color>
 
+    <color name="light_gray">#9a9a9a</color>
+
 </resources>

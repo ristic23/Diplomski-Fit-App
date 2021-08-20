@@ -1,4 +1,4 @@
-package com.fit.diplomski.app.intentService
+package com.fit.diplomski.app.activityRecognition.intentService
 
 import android.app.IntentService
 import android.content.Intent

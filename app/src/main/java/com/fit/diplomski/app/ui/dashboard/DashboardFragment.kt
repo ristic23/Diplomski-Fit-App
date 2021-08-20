@@ -13,15 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.fit.diplomski.app.ActivityRecognitionLogAdapter
+import com.fit.diplomski.app.activityRecognition.ActivityRecognitionLogAdapter
 import com.fit.diplomski.app.MainActivity.Companion.BROADCAST_DETECTED_ACTIVITY
 import com.fit.diplomski.app.MainActivity.Companion.CONFIDENCE
 import com.fit.diplomski.app.R
 import com.fit.diplomski.app.databinding.FragmentDashboardBinding
-import com.fit.diplomski.app.intentService.BackgroundDetectedActivitiesService
-import com.fit.diplomski.app.model.RecognitionLogData
+import com.fit.diplomski.app.activityRecognition.intentService.BackgroundDetectedActivitiesService
+import com.fit.diplomski.app.activityRecognition.model.RecognitionLogData
 import com.google.android.gms.location.DetectedActivity
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DashboardFragment : Fragment() {

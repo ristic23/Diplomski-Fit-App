@@ -1,4 +1,4 @@
-package com.fit.diplomski.app.bluetooth.adapter
+package com.fit.diplomski.app.miBand
 
 import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.fit.diplomski.app.databinding.DeviceListItemBinding
 import java.util.ArrayList
 
-class BluetoothListAdapter(private var dataSet: ArrayList<BluetoothDevice>) : RecyclerView.Adapter<BluetoothListAdapter.ViewHolder>()
+class MiBandsListAdapter(private var dataSet: ArrayList<BluetoothDevice>) : RecyclerView.Adapter<MiBandsListAdapter.ViewHolder>()
 {
     interface BluetoothDeviceClickInterface
     {
@@ -27,12 +27,14 @@ class BluetoothListAdapter(private var dataSet: ArrayList<BluetoothDevice>) : Re
         notifyDataSetChanged()
     }
 
+    public fun getList() :ArrayList<BluetoothDevice> = dataSet
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(DeviceListItemBinding.inflate(LayoutInflater.from(parent.context),
             parent, false));
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder , position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val btDataItem = dataSet[position]
 
         viewHolder.itemBinding.titleTextView.text = btDataItem.name

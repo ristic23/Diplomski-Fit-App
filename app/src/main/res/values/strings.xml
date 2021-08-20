@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Jovan Ristic Fit App</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Mi band</string>
+    <string name="title_dashboard">Recognition</string>
+    <string name="title_notifications">Settings</string>
 
     <string name="button_connect">Connect</string>
     <string name="button_disconnect">Disconnect</string>
@@ -22,7 +22,7 @@
     <string name="scanningInProgressText">Scanning in progress</string>
     <string name="connectingInProgressText">Connecting in progress</string>
     <string name="pairingInProgressText">Pairing in progress</string>
-    <string name="scanningSuccessfulText">Scanning successful</string>
+    <string name="scanningFinishedText">Scanning finished</string>
     <string name="pairingSuccessfulText">Pairing successful</string>
     <string name="pairDeviceText">Pair device</string>
 
@@ -34,6 +34,11 @@
     <string name="activity_tilting">Tilting</string>
     <string name="activity_walking">walking</string>
     <string name="activity_unknown">Unknown</string>
+
+    <string name="macAddressText">MAC Address</string>
+    <string name="deviceNameText">Device name</string>
+
+    <string name="retryText">Retry</string>
 
 
 </resources>

@@ -1,10 +1,10 @@
-package com.fit.diplomski.app
+package com.fit.diplomski.app.activityRecognition
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.fit.diplomski.app.databinding.TempActivityRecognitionItemBinding
-import com.fit.diplomski.app.model.RecognitionLogData
+import com.fit.diplomski.app.activityRecognition.model.RecognitionLogData
 
 class ActivityRecognitionLogAdapter(val list: ArrayList<RecognitionLogData>)
     : RecyclerView.Adapter<ActivityRecognitionLogAdapter.ViewHolder>()

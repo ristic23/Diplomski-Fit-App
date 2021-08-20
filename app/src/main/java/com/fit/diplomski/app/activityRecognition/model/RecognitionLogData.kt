@@ -1,4 +1,4 @@
-package com.fit.diplomski.app.model
+package com.fit.diplomski.app.activityRecognition.model
 
 data class RecognitionLogData(
     val time: String = "not set",

@@ -1,44 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="fill_parent"
-    android:layout_height="85dp"
-    android:weightSum="1">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bluetoothCardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="h, 4:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardBackgroundColor="@color/bluetoothCardBgColor"
+        app:cardCornerRadius="@dimen/_10sdp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_margin="@dimen/_2sdp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintVertical_weight="10">
+
+            <TextView
+                android:id="@+id/titleTextViewDesc"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/deviceNameText"
+                android:textAlignment="center"
+                android:textSize="@dimen/_8sdp"
+                android:textColor="@color/light_gray"
+                android:singleLine="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/titleTextView"
+                app:layout_constraintVertical_weight="1.5"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textSize="@dimen/_20sdp"
+                android:textColor="#fff"
+                android:singleLine="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleTextViewDesc"
+                app:layout_constraintBottom_toTopOf="@+id/macAddressDesc"
+                app:layout_constraintVertical_weight="5"/>
+
+            <TextView
+                android:id="@+id/macAddressDesc"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:text="@string/macAddressText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                app:layout_constraintBottom_toTopOf="@+id/macAddress"
+                android:textAlignment="center"
+                android:textSize="@dimen/_8sdp"
+                android:textColor="@color/light_gray"
+                android:singleLine="true"
+                app:layout_constraintVertical_weight="1.5"/>
+
+            <TextView
+                android:id="@+id/macAddress"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/macAddressDesc"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textSize="@dimen/_11sdp"
+                android:textColor="#fff"
+                android:singleLine="true"
+                app:layout_constraintVertical_weight="2"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
-    <TextView
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/titleTextView"
-        android:layout_gravity="center"
-        android:textStyle="bold"
-        android:layout_weight="0.04"
-        android:paddingTop="3dp"
-        android:textAlignment="center"
-        android:textSize="30dp"
-        android:textColor="#fff"
-        android:singleLine="true" />
-
-    <View
-        android:layout_width="250dp"
-        android:layout_height="1dp"
-        android:id="@+id/line"
-        android:background="#fff"
-        android:layout_below="@+id/titleTextView"
-        />
-    <TextView
-        android:layout_width="200dp"
-        android:layout_height="30dp"
-        android:text="MAC Address"
-        android:id="@+id/macAddress"
-        android:layout_below="@+id/titleTextView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/titleTextView"
-        android:layout_alignEnd="@+id/titleTextView"
-        android:textOff="@string/button_disconnect"
-        android:textOn="@string/button_connect"
-        android:textColor="#fff" />
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
