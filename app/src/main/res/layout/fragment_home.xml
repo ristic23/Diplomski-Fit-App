@@ -7,12 +7,44 @@
     android:id="@+id/rootView"
     tools:context=".miBand.HomeFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/scanAndConnectHolder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:max="100"
+            android:progress="75"/>
+
+        <TextView
+            android:id="@+id/currentStateTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressIndicator"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/tapToScanText"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/bluetoothCardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="h, 8:1"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scanAndConnectHolder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:cardBackgroundColor="@color/bluetoothCardBgColor"
@@ -62,6 +94,16 @@
 
     </androidx.cardview.widget.CardView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/bluetoothDevicesRV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothCardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="@dimen/_5sdp"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/miBandHolder"
         android:layout_width="0dp"
@@ -69,13 +111,14 @@
         app:layout_constraintTop_toBottomOf="@+id/bluetoothCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/scanCardView"
+            android:id="@+id/miBandBatteryLevelCardView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="h, 8:1"
+            app:layout_constraintDimensionRatio="h, 6:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -88,90 +131,110 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ProgressBar
-                    android:id="@+id/habitProgressBar"
+                <TextView
+                    android:id="@+id/miBandBatteryLevelText"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    style="@style/CustomProgressBarHorizontal"
-                    android:indeterminate="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:max="45"
-                    android:progress="0"/>
-
-                <ImageView
-                    android:id="@+id/scanIcon"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="w, 1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_search"
-                    android:layout_margin="@dimen/_5sdp"/>
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:text="@string/miBandBatteryLevelText"/>
 
                 <TextView
-                    android:id="@+id/scanTextMsg"
+                    android:id="@+id/miBandBatteryLevelCurrentText"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintStart_toEndOf="@+id/scanIcon"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/miBandBatteryLevelText"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:gravity="start|center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
                     android:textColor="@color/white"
-                    android:text="@string/tapToScanText"/>
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_15sdp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/pairCardView"
+            android:id="@+id/stepCounterCardView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="h, 6:1"
-            app:layout_constraintTop_toBottomOf="@+id/scanCardView"
+            app:layout_constraintTop_toBottomOf="@+id/miBandBatteryLevelCardView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:cardBackgroundColor="@color/bluetoothCardBgColor"
             app:cardCornerRadius="@dimen/_10sdp"
             android:foreground="?android:attr/selectableItemBackground"
-            android:layout_margin="@dimen/_5sdp"
-            android:visibility="gone">
+            android:layout_margin="@dimen/_5sdp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/pairTextMsg"
+                    android:id="@+id/stepCounterText"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:text="@string/pairDeviceText"/>
+                    android:text="@string/stepsText"/>
+
+                <TextView
+                    android:id="@+id/stepCounterCurrentText"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stepCounterText"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_15sdp"
+                    android:text="0"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bluetoothDevicesRV"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/pairCardView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/readBattery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read Battery"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="@dimen/_5sdp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="@dimen/_2sdp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/getSteps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get Steps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="@dimen/_2sdp"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/stepsStatusTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:textColor="@color/teal_700"
+        android:textStyle="bold"
+        android:textSize="@dimen/_20sdp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

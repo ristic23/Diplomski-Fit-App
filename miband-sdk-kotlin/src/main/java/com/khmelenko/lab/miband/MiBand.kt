@@ -20,7 +20,9 @@ import java.util.*
 
  * @author Dmytro Khmelenko
  */
-class MiBand(private val context: Context, private val batteryCallback: (level:Int)->Unit) : BluetoothListener {
+class MiBand(private val context: Context) : BluetoothListener
+// nacin kako lambdu da napravis, private val batteryCallback: (level:Int)->Unit)
+{
 
     private val bluetoothIo: BluetoothIO = BluetoothIO(this)
 
@@ -430,7 +432,8 @@ class MiBand(private val context: Context, private val batteryCallback: (level:I
         // Battery info
         if (characteristicId == Profile.UUID_CHAR_BATTERY)
         {
-            batteryCallback(data.value[0].toInt())
+            if(batteryLevelListener != null && data.value.isNotEmpty())
+                batteryLevelListener.batteryLevelReadCompleted(data.value[0].toInt())
 //            val info = BatteryInfo.fromByteData(data.value)
 //            if ((0 .. 100).contains(info as Int)) {
 //                println("Battery lvl = {$info}")
@@ -546,4 +549,18 @@ class MiBand(private val context: Context, private val batteryCallback: (level:I
             }
         }
     }
+
+    interface BatteryLevelInterface
+    {
+        fun batteryLevelReadCompleted(batteryValue: Int)
+    }
+
+    private lateinit var batteryLevelListener: BatteryLevelInterface
+
+    fun setBatteryLevelInterface(batteryLevelListener: BatteryLevelInterface)
+    {
+        this.batteryLevelListener = batteryLevelListener
+    }
+
+
 }

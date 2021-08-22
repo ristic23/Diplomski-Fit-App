@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.fit.diplomski.app"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -91,5 +91,7 @@ dependencies
             implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
             implementation "com.google.android.material:material:$rootProject.materialVersion"
 
+            implementation("com.google.android.gms:play-services-fitness:20.0.0")
+            implementation("com.google.android.gms:play-services-auth:19.2.0")
 
         }

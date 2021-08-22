@@ -2,9 +2,12 @@ package com.khmelenko.lab.miband
 
 import android.bluetooth.*
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.khmelenko.lab.miband.model.Profile
 import java.util.*
 import kotlin.collections.HashMap
+
 
 const val ERROR_CONNECTION_FAILED = 1
 const val ERROR_READ_RSSI_FAILED = 2
@@ -28,7 +31,7 @@ internal class BluetoothIO(private val listener: BluetoothListener?) : Bluetooth
      * @param device  Device to connect
      */
     fun connect(context: Context, device: BluetoothDevice) {
-        device.connectGatt(context, false, this)
+        device.connectGatt(context, false, this, BluetoothDevice.TRANSPORT_LE)
     }
 
     /**
@@ -54,6 +57,10 @@ internal class BluetoothIO(private val listener: BluetoothListener?) : Bluetooth
 
         val service = bluetoothGatt?.getService(serviceUUID)
         if (service != null) {
+            for((i) in service.characteristics.withIndex())
+            {
+                println("characteristic.uuid $i = ${service.characteristics[i].uuid}")
+            }
             val characteristic = service.getCharacteristic(characteristicId)
             if (characteristic != null) {
                 characteristic.value = value
@@ -166,12 +173,15 @@ internal class BluetoothIO(private val listener: BluetoothListener?) : Bluetooth
         super.onConnectionStateChange(gatt, status, newState)
         println("bluetoothGatt state onConnectionStateChange 1 = $newState")
         if (newState == BluetoothProfile.STATE_CONNECTED) {
+            val bondstate: Int = gatt.device.bondState
             bluetoothGatt = gatt
             gatt.discoverServices()
             println("bluetoothGatt state onConnectionStateChange 2 = ${bluetoothGatt != null}")
         } else {
             gatt.close()
             listener?.onDisconnected()
+            if(bluetoothGatt != null)
+                bluetoothGatt?.close()
         }
     }
 

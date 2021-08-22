@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 class HomeViewModel(private val repository: MiBandRepository) : ViewModel() {
 
     var isScanRunning = false
-    var scanProgress = 0
 
     val allMiBandEntries: LiveData<List<EntryMiBand>> = repository.allMiBandEntries.asLiveData()
 

@@ -24,7 +24,8 @@
     <string name="pairingInProgressText">Pairing in progress</string>
     <string name="scanningFinishedText">Scanning finished</string>
     <string name="pairingSuccessfulText">Pairing successful</string>
-    <string name="pairDeviceText">Pair device</string>
+    <string name="miBandBatteryLevelText">Mi Band Battery Level</string>
+    <string name="stepsText">Steps</string>
 
     <string name="activity_in_vehicle">In Vehicle</string>
     <string name="activity_on_bicycle">On Bicycle</string>
