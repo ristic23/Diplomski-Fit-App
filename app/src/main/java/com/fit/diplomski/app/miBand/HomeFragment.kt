@@ -1,7 +1,8 @@
 package com.fit.diplomski.app.miBand
 
+import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.annotation.SuppressLint
+import android.Manifest.permission.ACTIVITY_RECOGNITION
 import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
@@ -12,6 +13,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -141,6 +144,9 @@ class HomeFragment : Fragment(), MiBandsListAdapter.BluetoothDeviceClickInterfac
         }
         else
             checkLocationPermission()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            checkFitnessPermission()
+//        }
     }
 
     override fun onPause() {
@@ -312,7 +318,7 @@ class HomeFragment : Fragment(), MiBandsListAdapter.BluetoothDeviceClickInterfac
                 AlertDialog.Builder(mActivity)
                     .setTitle("Location permission")
                     .setMessage("Mi Band needs to access your location in order to continue working.")
-                    .setPositiveButton("OK") { _, i ->
+                    .setPositiveButton("OK") { _, _ ->
                         //Prompt the user once explanation has been shown
                         ActivityCompat.requestPermissions(mActivity,
                             arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_LOCATION
@@ -322,12 +328,41 @@ class HomeFragment : Fragment(), MiBandsListAdapter.BluetoothDeviceClickInterfac
                     .show()
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(mActivity, arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_LOCATION)
+//                ActivityCompat.requestPermissions(mActivity, arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_LOCATION)
+                requestPermissions(arrayOf(ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_LOCATION)
             }
         }
     }
 
-    @SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun checkFitnessPermission() {
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED)
+        {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity, Manifest.permission.ACTIVITY_RECOGNITION))
+            {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                AlertDialog.Builder(mActivity)
+                    .setTitle("Fitness permission")
+                    .setMessage("GoogleFit needs to access your fitness data in order to continue working.")
+                    .setPositiveButton("OK") { _, i ->
+                        //Prompt the user once explanation has been shown
+                        ActivityCompat.requestPermissions(mActivity,
+                            arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), PERMISSIONS_REQUEST_ACTIVITY_RECOGNITION
+                        )
+                    }
+                    .create()
+                    .show()
+            } else {
+                // No explanation needed, we can request the permission.
+//                ActivityCompat.requestPermissions(mActivity, arrayOf(ACTIVITY_RECOGNITION), PERMISSIONS_REQUEST_LOCATION)
+                requestPermissions(arrayOf(ACTIVITY_RECOGNITION), PERMISSIONS_REQUEST_LOCATION)
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             PERMISSIONS_REQUEST_LOCATION -> {
@@ -335,6 +370,8 @@ class HomeFragment : Fragment(), MiBandsListAdapter.BluetoothDeviceClickInterfac
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(mActivity, "Location permission granted", Toast.LENGTH_SHORT).show()
                     locationManager.requestLocationUpdates(provider, 400, 1f, this)
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                        checkFitnessPermission()
                 } else {
                     Toast.makeText(mActivity, "Location permission denied. Please grant location permission.",
                         Toast.LENGTH_SHORT).show()
@@ -363,6 +400,7 @@ class HomeFragment : Fragment(), MiBandsListAdapter.BluetoothDeviceClickInterfac
 
     companion object {
         const val PERMISSIONS_REQUEST_LOCATION = 99
+        const val PERMISSIONS_REQUEST_ACTIVITY_RECOGNITION = 3322
     }
 
     //endregion

@@ -2,7 +2,7 @@
     <string name="app_name">Jovan Ristic Fit App</string>
     <string name="title_home">Mi band</string>
     <string name="title_dashboard">Recognition</string>
-    <string name="title_notifications">Settings</string>
+    <string name="title_notifications">Google Fit</string>
 
     <string name="button_connect">Connect</string>
     <string name="button_disconnect">Disconnect</string>
