@@ -16,7 +16,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.fit.diplomski.app"
+        applicationId "com.google.fit.diplomski.app"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1

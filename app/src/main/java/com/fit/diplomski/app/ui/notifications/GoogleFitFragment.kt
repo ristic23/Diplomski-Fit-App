@@ -1,5 +1,6 @@
 package com.fit.diplomski.app.ui.notifications
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -65,6 +67,10 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
         super.onViewCreated(view, savedInstanceState)
 
         checkGoogleFitPermissions()
+
+        viewBinding.getHistory.setOnClickListener {
+            requestForHistory()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -99,11 +105,12 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        Log.d("subscribeGetTimeData","resultCode = $resultCode and requestCode = $requestCode")
-        if(resultCode == GOOGLE_REQUESTE_CODE)
+        if(requestCode == GOOGLE_REQUESTE_CODE)
         {
-            startReadingData()
+            if(resultCode == RESULT_OK)
+                startReadingData()
+            else
+                Toast.makeText(mActivity, "Google oauth failed", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -190,6 +197,7 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
                         getDataFromDataReadResponse(bucket.getDataSet(DataType.TYPE_CALORIES_EXPENDED))
                         getDataFromDataReadResponse(bucket.getDataSet(DataType.TYPE_DISTANCE_DELTA))
                     }
+                    showDataHistory()
                 }
             }
     }
@@ -206,11 +214,11 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
                     fitnessDataResponseModel.steps = DecimalFormat("#.##").format(value).toFloat()
                 else {
                     if (field.name.equals(Field.FIELD_CALORIES.name))
-                        fitnessDataResponseModel.steps =
+                        fitnessDataResponseModel.calories =
                             DecimalFormat("#.##").format(value).toFloat()
                     else
                         if(field.name.equals(Field.FIELD_DISTANCE.name))
-                            fitnessDataResponseModel.steps = DecimalFormat("#.##").format(value).toFloat()
+                            fitnessDataResponseModel.distance = DecimalFormat("#.##").format(value).toFloat()
                 }
             }
         }
@@ -226,11 +234,11 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
                     fitnessDataResponseModel.steps = DecimalFormat("#.##").format(value).toFloat()
                 else {
                     if (field.name.equals(Field.FIELD_CALORIES.name))
-                        fitnessDataResponseModel.steps =
+                        fitnessDataResponseModel.calories =
                             DecimalFormat("#.##").format(value).toFloat()
                     else
                         if(field.name.equals(Field.FIELD_DISTANCE.name))
-                            fitnessDataResponseModel.steps = DecimalFormat("#.##").format(value).toFloat()
+                            fitnessDataResponseModel.distance = DecimalFormat("#.##").format(value).toFloat()
                 }
             }
         }
@@ -239,9 +247,16 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
 
     private fun showData()
     {
-        viewBinding.stepsTextView.text = fitnessDataResponseModel.steps.toString()
-        viewBinding.caloriesTextView.text = fitnessDataResponseModel.calories.toString()
-        viewBinding.distanceTextView.text = fitnessDataResponseModel.distance.toString()
+        viewBinding.stepsTextView.text = "Steps = ${fitnessDataResponseModel.steps.toString()}"
+        viewBinding.caloriesTextView.text = "Calories = ${fitnessDataResponseModel.calories.toString()}"
+        viewBinding.distanceTextView.text = "Distance = ${fitnessDataResponseModel.distance.toString()}"
+    }
+
+    private fun showDataHistory()
+    {
+        viewBinding.stepsHistoryTextView.text = "Steps History = ${fitnessDataResponseModel.steps.toString()}"
+        viewBinding.caloriesHistoryTextView.text = "Calories History = ${fitnessDataResponseModel.calories.toString()}"
+        viewBinding.distanceHistoryTextView.text = "Distance History = ${fitnessDataResponseModel.distance.toString()}"
     }
 
     private fun getDataUsingSensor(dataType: DataType)
@@ -254,7 +269,7 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
                 OnDataPointListener{dataPoint ->
                     val value = dataPoint.getValue(Field.FIELD_STEPS).toString().toFloat()
                     fitnessDataResponseModel.steps = DecimalFormat("#.##").format(value).toFloat()
-                    viewBinding.stepsTextView.text = fitnessDataResponseModel.steps.toString()
+                    viewBinding.stepsTextView.text = "Steps = ${fitnessDataResponseModel.steps.toString()}"
                 }
             )
     }
