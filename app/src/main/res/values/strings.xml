@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Jetpack Compose Svastara</string>
+    <string name="app_name">Google Fit Diplomski</string>
+
+    <string name="default_web_client_id_local">195567631082-cr0oia1f5hk8pnfovt0tf8ndhjlohd75.apps.googleusercontent.com</string>
+
+
 </resources>

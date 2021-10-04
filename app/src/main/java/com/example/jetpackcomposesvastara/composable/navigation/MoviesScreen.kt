@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.navigation
+package com.example.jetpackcomposesvastara.composable.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,9 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposesvastara.R
 
-
 @Composable
-fun MusicScreen() {
+fun MoviesScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -26,7 +25,7 @@ fun MusicScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Music View",
+            text = "Movies View",
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -38,6 +37,6 @@ fun MusicScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun MusicScreenPreview() {
-    MusicScreen()
+fun MoviesScreenPreview() {
+    MoviesScreen()
 }

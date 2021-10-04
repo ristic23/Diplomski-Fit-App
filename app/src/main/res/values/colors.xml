@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="progress_bg">#CC323232</color>
+    <color name="steps_progress">#177BA3</color>
+    <color name="cal_progress">#B86C32</color>
+    <color name="distance_progress">#3AA85A</color>
+    <color name="progress_text_color">#566E82</color>
+
 </resources>

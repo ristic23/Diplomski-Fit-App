@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.navigation
+package com.example.jetpackcomposesvastara.composable.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposesvastara.R
 
 @Composable
-fun HomeScreen() {
+fun ProfileScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -25,7 +25,7 @@ fun HomeScreen() {
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Home View",
+            text = "Profile View",
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -37,6 +37,6 @@ fun HomeScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
-    HomeScreen()
+fun ProfileScreenPreview() {
+    ProfileScreen()
 }

@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.navigation
+package com.example.jetpackcomposesvastara.composable.navigation
 
 import com.example.jetpackcomposesvastara.R
 

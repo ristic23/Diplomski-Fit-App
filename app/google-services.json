@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "195567631082",
+    "project_id": "animated-alloy-323819",
+    "storage_bucket": "animated-alloy-323819.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195567631082:android:add6f537a86ba5df9f3593",
+        "android_client_info": {
+          "package_name": "com.google.fit.diplomski.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195567631082-3qotn274l2i0noj8avf7icdosbqnbl63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.google.fit.diplomski.app",
+            "certificate_hash": "fae782e6338357700db7d6dd2f165802d8bae53b"
+          }
+        },
+        {
+          "client_id": "195567631082-cr0oia1f5hk8pnfovt0tf8ndhjlohd75.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGviECa63p2clfCO-8sDr0yIQO2CySq9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195567631082-cr0oia1f5hk8pnfovt0tf8ndhjlohd75.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
