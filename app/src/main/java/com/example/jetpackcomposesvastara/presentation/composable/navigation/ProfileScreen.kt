@@ -1,9 +1,10 @@
-package com.example.jetpackcomposesvastara.composable.navigation
+package com.example.jetpackcomposesvastara.presentation.composable.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,19 +17,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposesvastara.R
 
-
 @Composable
-fun MusicScreen() {
+fun ProfileScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.teal_700))
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Music View",
+            text = "Profile View",
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = MaterialTheme.colors.onBackground,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
             fontSize = 25.sp
@@ -38,6 +37,6 @@ fun MusicScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun MusicScreenPreview() {
-    MusicScreen()
+fun ProfileScreenPreview() {
+    ProfileScreen()
 }

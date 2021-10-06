@@ -1,9 +1,10 @@
-package com.example.jetpackcomposesvastara.composable
+package com.example.jetpackcomposesvastara.presentation.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jetpackcomposesvastara.R
-import org.w3c.dom.Text
 
 
 @Composable
@@ -23,7 +23,7 @@ fun LinearProgressBar(maxValue: Int, progressValue: Int,
                       progressColor: Color, bgColor: Color,
                       textColor: Color, text: String)
 {
-    Column (modifier = Modifier.background(Color.White)){
+    Column (modifier = Modifier.background(MaterialTheme.colors.onBackground)){
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,) {

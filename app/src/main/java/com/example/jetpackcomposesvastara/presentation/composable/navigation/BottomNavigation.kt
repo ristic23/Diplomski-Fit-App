@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.composable.navigation
+package com.example.jetpackcomposesvastara.presentation.composable.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -20,13 +20,13 @@ import com.example.jetpackcomposesvastara.R
 fun BottomNavigationBar() {
     val items = listOf(
         NavigationItem.Home,
-        NavigationItem.Music,
-        NavigationItem.Movies,
+        NavigationItem.Goals,
+        NavigationItem.Journal,
         NavigationItem.Profile
     )
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.teal_200),
-        contentColor = Color.White
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onBackground
     ) {
         items.forEach { item ->
             BottomNavigationItem(
@@ -35,8 +35,8 @@ fun BottomNavigationBar() {
                         isSelected = item.isSelected,
                         text = item.title) },
                 label = { Text(text = "") },
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.White.copy(0.4f),
+                selectedContentColor = MaterialTheme.colors.onBackground,
+                unselectedContentColor = MaterialTheme.colors.onBackground.copy(0.4f),
                 alwaysShowLabel = false,
                 selected = item.isSelected,
                 onClick = {
@@ -73,7 +73,7 @@ fun BottomNavBarIcon(
                     modifier = Modifier.padding(4.dp)
                 )
                 Text(text = if(isSelected) text else "",
-                    color = Color.White,
+                    color = MaterialTheme.colors.onBackground,
                     fontSize = 16.sp,
                 )
             }

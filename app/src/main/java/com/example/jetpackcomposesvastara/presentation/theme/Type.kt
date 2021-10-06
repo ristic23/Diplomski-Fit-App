@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.ui.theme
+package com.example.jetpackcomposesvastara.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

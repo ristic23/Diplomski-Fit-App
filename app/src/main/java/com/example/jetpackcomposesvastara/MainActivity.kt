@@ -2,13 +2,16 @@ package com.example.jetpackcomposesvastara
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,7 +21,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.jetpackcomposesvastara.composable.navigation.*
+import com.example.jetpackcomposesvastara.presentation.composable.navigation.*
+import com.example.jetpackcomposesvastara.presentation.composable.splashScreen.SplashScreen
+import com.example.jetpackcomposesvastara.presentation.theme.DiplomskiTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -116,30 +121,34 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    Scaffold(
-        topBar = {},
-        bottomBar = { BottomNavigationBar(navController) }
-    ) {
-        Navigation(navController = navController)
+    DiplomskiTheme {
+        Surface(
+            color = MaterialTheme.colors.background,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Scaffold(
+                topBar = {},
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                Navigation(navController = navController)
+            }
+        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    MainScreen()
 }
 
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = NavigationItem.Home.route) {
+    NavHost(navController, startDestination = NavigationItem.Splash.route) {
+        composable(NavigationItem.Splash.route) {
+            SplashScreen(navController)
+        }
         composable(NavigationItem.Home.route) {
             HomeScreen()
         }
-        composable(NavigationItem.Music.route) {
+        composable(NavigationItem.Goals.route) {
             MusicScreen()
         }
-        composable(NavigationItem.Movies.route) {
+        composable(NavigationItem.Journal.route) {
             MoviesScreen()
         }
         composable(NavigationItem.Profile.route) {
@@ -152,13 +161,13 @@ fun Navigation(navController: NavHostController) {
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem.Home,
-        NavigationItem.Music,
-        NavigationItem.Movies,
+        NavigationItem.Goals,
+        NavigationItem.Journal,
         NavigationItem.Profile
     )
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.teal_200),
-        contentColor = Color.White
+        backgroundColor = MaterialTheme.colors.surface,
+        contentColor = MaterialTheme.colors.onBackground
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -168,8 +177,8 @@ fun BottomNavigationBar(navController: NavController) {
                     BottomNavBarIcon(iconId = item.icon,
                         isSelected = currentRoute == item.route,
                         text = item.title) },
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.White.copy(0.4f),
+                selectedContentColor = MaterialTheme.colors.onBackground,
+                unselectedContentColor = MaterialTheme.colors.onBackground.copy(0.4f),
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
