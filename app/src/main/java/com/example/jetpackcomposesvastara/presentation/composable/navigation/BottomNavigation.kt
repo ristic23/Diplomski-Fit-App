@@ -70,7 +70,8 @@ fun BottomNavBarIcon(
                 Image(
                     painter = painterResource(iconId),
                     contentDescription = null,
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier.padding(4.dp),
+                    alpha = if(isSelected) 1f else 0.5f
                 )
                 Text(text = if(isSelected) text else "",
                     color = MaterialTheme.colors.onBackground,

@@ -2,18 +2,16 @@ package com.example.jetpackcomposesvastara
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -24,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.jetpackcomposesvastara.presentation.composable.navigation.*
 import com.example.jetpackcomposesvastara.presentation.composable.splashScreen.SplashScreen
 import com.example.jetpackcomposesvastara.presentation.theme.DiplomskiTheme
+import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -40,6 +39,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+
+    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,7 +129,10 @@ fun MainScreen() {
         ) {
             Scaffold(
                 topBar = {},
-                bottomBar = { BottomNavigationBar(navController) }
+                bottomBar = {
+//                    if (currentRoute(navController) != NavigationItem.Splash.route)
+                        BottomNavigationBar(navController)
+                }
             ) {
                 Navigation(navController = navController)
             }
@@ -137,8 +141,14 @@ fun MainScreen() {
 }
 
 @Composable
+fun currentRoute(navController: NavHostController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
+}
+
+@Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController, startDestination = NavigationItem.Splash.route) {
+    NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Splash.route) {
             SplashScreen(navController)
         }
@@ -146,10 +156,10 @@ fun Navigation(navController: NavHostController) {
             HomeScreen()
         }
         composable(NavigationItem.Goals.route) {
-            MusicScreen()
+            GoalsScreen()
         }
         composable(NavigationItem.Journal.route) {
-            MoviesScreen()
+            JournalScreen()
         }
         composable(NavigationItem.Profile.route) {
             ProfileScreen()

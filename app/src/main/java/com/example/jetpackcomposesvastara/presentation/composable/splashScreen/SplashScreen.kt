@@ -42,7 +42,9 @@ fun SplashScreen(
                 }
         ))
         delay(SPLASH_SCREEN_DURATION)
-        navController.navigate(NavigationItem.Home.route)
+        navController.navigate(NavigationItem.Home.route) {
+            popUpTo(NavigationItem.Splash.route)
+        }
     }
 
     Box(

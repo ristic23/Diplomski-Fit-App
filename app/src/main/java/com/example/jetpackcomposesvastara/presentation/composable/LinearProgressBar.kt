@@ -23,7 +23,7 @@ fun LinearProgressBar(maxValue: Int, progressValue: Int,
                       progressColor: Color, bgColor: Color,
                       textColor: Color, text: String)
 {
-    Column (modifier = Modifier.background(MaterialTheme.colors.onBackground)){
+    Column {
         Row(modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,) {
