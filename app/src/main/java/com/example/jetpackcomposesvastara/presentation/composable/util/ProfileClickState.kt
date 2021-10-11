@@ -2,11 +2,7 @@ package com.example.jetpackcomposesvastara.presentation.composable.util
 
 enum class ProfileClickState
 {
-    STEPS,
+    INIT,
     GENDER,
-    BIRTHDAY,
-    WEIGHT,
-    HEIGHT,
-    FIRST_NAME,
-    LAST_NAME
+    BIRTHDAY
 }
