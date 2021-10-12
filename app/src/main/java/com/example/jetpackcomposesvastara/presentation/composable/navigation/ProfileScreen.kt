@@ -22,17 +22,23 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcomposesvastara.R
 import com.example.jetpackcomposesvastara.presentation.composable.util.Gender
 import com.example.jetpackcomposesvastara.presentation.composable.util.ProfileClickData
 import com.example.jetpackcomposesvastara.presentation.composable.util.ProfileClickState
+import com.example.jetpackcomposesvastara.presentation.viewModel.ProfileViewModel
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
+import java.util.*
+import com.example.jetpackcomposesvastara.presentation.composable.util.Date
+import java.util.Calendar.*
 
 //val context = LocalContext.current
 
@@ -60,6 +66,13 @@ fun ProfileScreen() {
         Icons.Filled.KeyboardArrowUp
     else
         Icons.Filled.KeyboardArrowDown
+
+    val viewModel :ProfileViewModel = viewModel()
+    val currContext = LocalContext.current
+    val date = viewModel.time.observeAsState()
+
+    profileClickData.birthDay.fromString(date.value)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,7 +97,7 @@ fun ProfileScreen() {
                 enabled = true,
                 keyboardType = KeyboardType.Number,
                 updateValue = {
-                    profileClickData.stepsValue = it.toInt()
+                    profileClickData.stepsValue = if(it.isEmpty()) 0 else it.toInt()
                 }
             )
         }
@@ -100,7 +113,7 @@ fun ProfileScreen() {
                 },
                 modifier = profileRowModifier,
                 enabled = true,
-                keyboardType = KeyboardType.Number,
+                keyboardType = KeyboardType.Text,
                 updateValue = {
                     profileClickData.firstName = it
                 }
@@ -112,7 +125,7 @@ fun ProfileScreen() {
                 },
                 modifier = profileRowModifier,
                 enabled = true,
-                keyboardType = KeyboardType.Number,
+                keyboardType = KeyboardType.Text,
                 updateValue = {
                     profileClickData.lastName = it
                 }
@@ -133,12 +146,9 @@ fun ProfileScreen() {
                         expanded = !expanded
                     },
                     modifier = Modifier,
-                    enabled = false,
                     keyboardType = KeyboardType.Text,
                     textFieldSize = {
                         textFieldSize = it
-                    },
-                    updateValue = {
                     },
                     icon = icon
                 )
@@ -162,18 +172,14 @@ fun ProfileScreen() {
                     }
                 }
             }
-            ShowProfileValue(
+            ShowProfileValueBirthday(
                 labelText = "Birthday",
                 value = profileClickData.birthDay.toString(),
                 fieldClicked = {
                     profileClickData.profileClickState = ProfileClickState.BIRTHDAY
-//                    dialogIsShowing.value = true
+                    viewModel.selectDateTime(currContext)
                 },
-                modifier = profileRowModifier,
-                enabled = false,
-                keyboardType = KeyboardType.Text,
-                updateValue = {
-                }
+                modifier = profileRowModifier
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -191,7 +197,7 @@ fun ProfileScreen() {
                 keyboardType = KeyboardType.Number,
                 suffix = "kg",
                 updateValue = {
-                    profileClickData.weight = it.toInt()
+                    profileClickData.weight = if(it.isEmpty()) 0 else it.removeSuffix("kg").toInt()
                 }
             )
             ShowProfileValue(
@@ -204,7 +210,7 @@ fun ProfileScreen() {
                 keyboardType = KeyboardType.Number,
                 suffix = "cm",
                 updateValue = {
-                    profileClickData.height = it.toInt()
+                    profileClickData.height = if(it.isEmpty()) 0 else it.removeSuffix("cm").toInt()
                 }
             )
         }
@@ -215,15 +221,12 @@ fun ProfileScreen() {
 
 }
 
-//todo next date picker
-
 @ExperimentalComposeUiApi
 @Composable
 fun ShowProfileValue(
     labelText: String,
     value: String,
     fieldClicked: () -> Unit,
-    textFieldSize: ((Size) -> Unit)? = null,
     modifier: Modifier,
     enabled: Boolean,
     keyboardType: KeyboardType,
@@ -247,8 +250,37 @@ fun ShowProfileValue(
         onValueChange = {
             if(enabled)
             {
-                newValue = it
-                updateValue.invoke(newValue)
+                if(suffix.isNotEmpty())
+                {
+                    if(it[it.length - 1].isDigit())
+                    {
+                        newValue = "$newValue${it[it.length - 1]}"
+                        updateValue.invoke("$newValue$suffix")
+                    }
+                    else
+                    {
+                        if(!it.endsWith(suffix))
+                        {
+                            newValue = if(newValue.dropLast(1).isEmpty()) "0" else newValue.dropLast(1)
+                            updateValue.invoke("$newValue$suffix")
+                        }
+                        else
+                        {
+                            newValue = if(it.removeSuffix(suffix).isEmpty()) "0" else it.removeSuffix(suffix)
+                            updateValue.invoke("$newValue$suffix")
+                        }
+                    }
+                }
+                else
+                {
+
+                    newValue = if(keyboardType == KeyboardType.Number && !it[it.length - 1].isDigit())
+                        it.dropLast(1)
+                    else
+                        it
+                    updateValue.invoke(newValue)
+                }
+
             }
         },
         label = {
@@ -259,10 +291,6 @@ fun ShowProfileValue(
         },
         modifier = modifier
             .padding(5.dp)
-            .onGloballyPositioned { coordinates ->
-                //This value is used to assign to the DropDown the same width
-                textFieldSize?.invoke(coordinates.size.toSize())
-            }
             .clickable {
                 if (!enabled)
                     fieldClicked()
@@ -289,6 +317,65 @@ fun ShowProfileValue(
     )
 }
 
+@ExperimentalComposeUiApi
+@Composable
+fun ShowProfileValueBirthday(
+    labelText: String,
+    value: String,
+    fieldClicked: () -> Unit,
+    modifier: Modifier
+)
+{
+    var newValue by remember {
+        mutableStateOf(value)
+    }
+    newValue = value
+    val focusedColorValue = Color(255, 255,255,191)
+    val notFocusedColorValue = Color(255, 255,255,128)
+    var focusedColor by remember {
+        mutableStateOf(focusedColorValue)
+    }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    OutlinedTextField(
+        value = newValue,
+        onValueChange = { },
+        label = {
+            Text(
+                text = labelText,
+                color = focusedColor
+            )
+        },
+        modifier = modifier
+            .padding(5.dp)
+            .clickable {
+                fieldClicked()
+            }
+            .onFocusChanged {
+                focusedColor = if (it.isFocused)
+                    focusedColorValue
+                else
+                    notFocusedColorValue
+            },
+        enabled = false,
+        textStyle = TextStyle(
+            color = MaterialTheme.colors.onBackground,
+            fontSize = 16.sp),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = focusedColorValue,
+            unfocusedBorderColor = notFocusedColorValue
+        ),
+        singleLine = true,
+        keyboardActions = KeyboardActions(onDone = {
+            keyboardController?.hide()
+        })
+    )
+}
+
+
+
 @Composable
 fun ShowProfileValueGender(
     labelText: String,
@@ -296,16 +383,11 @@ fun ShowProfileValueGender(
     fieldClicked: () -> Unit,
     textFieldSize: ((Size) -> Unit)? = null,
     modifier: Modifier,
-    enabled: Boolean,
     keyboardType: KeyboardType,
-    suffix: String = "",
-    updateValue: (String) -> Unit,
     icon: ImageVector
 )
 {
-    var newValue by remember {
-        mutableStateOf(value)
-    }
+
     val focusedColorValue = Color(255, 255,255,191)
     val notFocusedColorValue = Color(255, 255,255,128)
     var focusedColor by remember {
@@ -313,14 +395,8 @@ fun ShowProfileValueGender(
     }
 
     OutlinedTextField(
-        value = "$newValue$suffix",
-        onValueChange = {
-                if(enabled)
-                {
-                    newValue = it
-                    updateValue.invoke(newValue)
-                }
-        },
+        value = value,
+        onValueChange = { },
         label = {
             Text(
                 text = labelText,
@@ -334,8 +410,7 @@ fun ShowProfileValueGender(
                 textFieldSize?.invoke(coordinates.size.toSize())
             }
             .clickable {
-                if (!enabled)
-                    fieldClicked()
+                fieldClicked()
             }
             .onFocusChanged {
                 focusedColor = if (it.isFocused)
@@ -343,7 +418,7 @@ fun ShowProfileValueGender(
                 else
                     notFocusedColorValue
             },
-        enabled = enabled,
+        enabled = false,
         textStyle = TextStyle(
             color = MaterialTheme.colors.onBackground,
             fontSize = 16.sp),

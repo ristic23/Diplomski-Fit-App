@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -23,6 +24,7 @@ import com.example.jetpackcomposesvastara.presentation.composable.navigation.*
 import com.example.jetpackcomposesvastara.presentation.composable.splashScreen.SplashScreen
 import com.example.jetpackcomposesvastara.presentation.theme.DiplomskiTheme
 import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
+import com.example.jetpackcomposesvastara.presentation.viewModel.ProfileViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -34,13 +36,20 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
+
+
+
+
+
+
 @AndroidEntryPoint
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +128,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@ExperimentalComposeUiApi
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -146,6 +156,7 @@ fun currentRoute(navController: NavHostController): String? {
     return navBackStackEntry?.destination?.route
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController, startDestination = NavigationItem.Home.route) {
