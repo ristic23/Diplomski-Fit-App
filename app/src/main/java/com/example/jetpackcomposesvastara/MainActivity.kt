@@ -35,11 +35,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-
-
-
-
-
+import kotlin.coroutines.EmptyCoroutineContext.plus
 
 
 @AndroidEntryPoint
@@ -126,6 +122,8 @@ class MainActivity : ComponentActivity() {
     //endregion
 
 }
+
+
 
 
 @ExperimentalComposeUiApi

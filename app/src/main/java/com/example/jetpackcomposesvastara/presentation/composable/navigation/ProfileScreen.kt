@@ -32,12 +32,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcomposesvastara.R
 import com.example.jetpackcomposesvastara.presentation.composable.util.Gender
 import com.example.jetpackcomposesvastara.presentation.composable.util.ProfileClickData
-import com.example.jetpackcomposesvastara.presentation.composable.util.ProfileClickState
 import com.example.jetpackcomposesvastara.presentation.viewModel.ProfileViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import java.util.*
-import com.example.jetpackcomposesvastara.presentation.composable.util.Date
 import java.util.Calendar.*
 
 //val context = LocalContext.current
@@ -142,7 +140,6 @@ fun ProfileScreen() {
                     labelText = "Gender",
                     value = profileClickData.gender.toString(),
                     fieldClicked = {
-                        profileClickData.profileClickState = ProfileClickState.GENDER
                         expanded = !expanded
                     },
                     modifier = Modifier,
@@ -176,7 +173,6 @@ fun ProfileScreen() {
                 labelText = "Birthday",
                 value = profileClickData.birthDay.toString(),
                 fieldClicked = {
-                    profileClickData.profileClickState = ProfileClickState.BIRTHDAY
                     viewModel.selectDateTime(currContext)
                 },
                 modifier = profileRowModifier

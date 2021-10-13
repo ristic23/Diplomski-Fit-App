@@ -1,7 +1,6 @@
 package com.example.jetpackcomposesvastara.presentation.composable.util
 
 data class ProfileClickData(
-    var profileClickState: ProfileClickState = ProfileClickState.INIT,
     var gender: Gender = Gender.Male,
     var stepsValue: Int = 1000,
     var birthDay: Date = Date(),
