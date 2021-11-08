@@ -72,6 +72,8 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha09"
+    //animation
+    implementation "androidx.compose.animation:animation:$compose_version"
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:28.4.1')

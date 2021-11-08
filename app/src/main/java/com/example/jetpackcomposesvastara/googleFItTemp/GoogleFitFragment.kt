@@ -11,8 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.example.jetpackcomposesvastara.ApplicationClass
+import com.example.jetpackcomposesvastara.data.*
 import com.example.jetpackcomposesvastara.databinding.FragmentNotificationsBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -33,12 +32,7 @@ import java.util.concurrent.TimeUnit
 class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
 {
 //    TYPE_STEP_COUNT_DELTA , TYPE_STEP_COUNT_CUMULATIVE
-    private val TYPE_STEP_COUNT_DELTA = DataType.TYPE_STEP_COUNT_DELTA
-    private val AGGREGATE_STEP_COUNT_DELTA = DataType.AGGREGATE_STEP_COUNT_DELTA
-    private val TYPE_CALORIES_EXPENDED = DataType.TYPE_CALORIES_EXPENDED
-    private val AGGREGATE_CALORIES_EXPENDED = DataType.AGGREGATE_CALORIES_EXPENDED
-    private val TYPE_DISTANCE_DELTA = DataType.TYPE_DISTANCE_DELTA
-    private val AGGREGATE_DISTANCE_DELTA = DataType.AGGREGATE_DISTANCE_DELTA
+
 
     private val GOOGLE_REQUESTE_CODE = 5563
 
@@ -54,7 +48,7 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
     private lateinit var mActivity: AppCompatActivity
     private lateinit var mContext: Context
 
-    private lateinit var fitnessOption: FitnessOptions
+//    private lateinit var fitnessOption: FitnessOptions
 
     private var fitnessDataResponseModel = FitnessDataResponseModel()
 
@@ -89,14 +83,6 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
 
     private fun checkGoogleFitPermissions()
     {
-        fitnessOption = FitnessOptions.builder()
-            .addDataType(TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-            .addDataType(AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-            .addDataType(TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
-            .addDataType(AGGREGATE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
-            .addDataType(TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-            .addDataType(AGGREGATE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-            .build()
 
         val googleSignInAccount: GoogleSignInAccount = getGoogleAccount()
 

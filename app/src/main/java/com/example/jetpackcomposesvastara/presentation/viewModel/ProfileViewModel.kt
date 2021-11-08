@@ -1,16 +1,15 @@
 package com.example.jetpackcomposesvastara.presentation.viewModel
 
-import android.app.Application
 import android.app.DatePickerDialog
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import java.util.*
 import com.example.jetpackcomposesvastara.presentation.composable.util.Date
 import java.util.Calendar.getInstance
 
-class ProfileViewModel(application: Application): AndroidViewModel(application)
+class ProfileViewModel : ViewModel()
 {
 
     private val _time = MutableLiveData(
