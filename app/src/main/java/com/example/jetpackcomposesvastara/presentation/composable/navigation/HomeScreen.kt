@@ -38,53 +38,86 @@ fun CurrentProgressCard(viewModel: MainViewModel) {
     var stepsNumber by remember {
         mutableStateOf(0)
     }
+
+    var stepsGoalNumber by remember {
+        mutableStateOf(1)
+    }
     var caloriesNumber by remember {
         mutableStateOf(0)
     }
     var distanceNumber by remember {
         mutableStateOf(0)
     }
-//    viewModel.initValues()
+
     stepsNumber = viewModel.stepsLiveData.observeAsState(initial = 0).value
     caloriesNumber = viewModel.caloriesLiveData.observeAsState(initial = 0).value
     distanceNumber = viewModel.distanceLiveData.observeAsState(initial = 0).value
+    stepsGoalNumber = viewModel.stepsGoalLiveData.observeAsState(initial = 0).value
 
-    Surface(
-        shape = RoundedCornerShape(largeRoundedCorner),
-        elevation = cardElevation,
-        modifier = Modifier
-                .padding(20.dp),
-        color = MaterialTheme.colors.surface)
-    {
-        Column {
-            Spacer(modifier = Modifier.height(15.dp))
-            LinearProgressBar(
-                maxValue = 10000,
-                progressValue = stepsNumber,
-                progressColor = colorResource(id = R.color.steps_progress),
-                bgColor = colorResource(id = R.color.progress_bg),
-                textColor = colorResource(id = R.color.steps_progress),
-                text = "Steps"
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            LinearProgressBar(
-                maxValue = 100,
-                progressValue = caloriesNumber,
-                progressColor = colorResource(id = R.color.cal_progress),
-                bgColor = colorResource(id = R.color.progress_bg),
-                textColor = colorResource(id = R.color.cal_progress),
-                text = "Calories"
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            LinearProgressBar(
-                maxValue = 10000,
-                progressValue = distanceNumber,
-                progressColor = colorResource(id = R.color.distance_progress),
-                bgColor = colorResource(id = R.color.progress_bg),
-                textColor = colorResource(id = R.color.distance_progress),
-                text = "Distances"
-            )
-            Spacer(modifier = Modifier.height(15.dp))
+    Column {
+        Surface(
+            shape = RoundedCornerShape(largeRoundedCorner),
+            elevation = cardElevation,
+            modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+            color = MaterialTheme.colors.surface)
+        {
+            Column {
+                Spacer(modifier = Modifier.height(15.dp))
+                LinearProgressBar(
+                    progress = (stepsNumber.toFloat() / stepsGoalNumber),
+                    progressText = "$stepsNumber / $stepsGoalNumber",
+                    progressColor = colorResource(id = R.color.steps_progress),
+                    bgColor = colorResource(id = R.color.progress_bg),
+                    textColor = colorResource(id = R.color.steps_progress),
+                    text = "Steps",
+                    isLinearProgressIndicatorVisible = true
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+            }
         }
+        Surface(
+            shape = RoundedCornerShape(largeRoundedCorner),
+            elevation = cardElevation,
+            modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+            color = MaterialTheme.colors.surface)
+        {
+            Column {
+                Spacer(modifier = Modifier.height(10.dp))
+                LinearProgressBar(
+                    progress = 1f,
+                    progressText = "$caloriesNumber Cal",
+                    progressColor = colorResource(id = R.color.cal_progress),
+                    bgColor = colorResource(id = R.color.progress_bg),
+                    textColor = colorResource(id = R.color.cal_progress),
+                    text = "Calories",
+                    isLinearProgressIndicatorVisible = false
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+        }
+        Surface(
+            shape = RoundedCornerShape(largeRoundedCorner),
+            elevation = cardElevation,
+            modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+            color = MaterialTheme.colors.surface)
+        {
+            Column {
+                Spacer(modifier = Modifier.height(10.dp))
+                LinearProgressBar(
+                    progress = 1f,
+                    progressText = "${distanceNumber * 0.001f} km",
+                    progressColor = colorResource(id = R.color.distance_progress),
+                    bgColor = colorResource(id = R.color.progress_bg),
+                    textColor = colorResource(id = R.color.distance_progress),
+                    text = "Distances",
+                    isLinearProgressIndicatorVisible = false
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+        }
+
     }
 }

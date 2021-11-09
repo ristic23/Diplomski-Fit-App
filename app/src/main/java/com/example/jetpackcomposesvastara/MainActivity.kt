@@ -298,6 +298,11 @@ class MainActivity : ComponentActivity() {
 
     private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
+    private val permissionArray = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACTIVITY_RECOGNITION
+    )
+
     private fun checkPermissionsAndRun() {
         if (!permissionApproved())
             requestRuntimePermissions()
@@ -305,20 +310,24 @@ class MainActivity : ComponentActivity() {
             setContent()
     }
 
-    private fun permissionApproved(): Boolean {
-        val approved = if (runningQOrLater) {
-            PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACTIVITY_RECOGNITION)
-        } else {
-            true
+    private fun permissionApproved(): Boolean
+    {
+        var isGreenLight = true
+        for(permission in permissionArray)
+        {
+            if(PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this, permission))
+            {
+                isGreenLight = false
+                break
+            }
         }
-        return approved
+
+        return isGreenLight
     }
 
     private fun requestRuntimePermissions() {
         ActivityCompat.requestPermissions(this,
-            arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+            permissionArray,
             ACTIVITY_RECOGNITION_CODE)
     }
 
@@ -332,9 +341,13 @@ class MainActivity : ComponentActivity() {
                     // is cancelled and you receive empty arrays.
                     Log.i(TAG, "User interaction was cancelled.")
                 }
-                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                grantResults.size == permissionArray.size -> {
+
                     // Permission was granted.
-                    setContent()
+
+                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED)
+                        setContent()
                 }
             }
     }

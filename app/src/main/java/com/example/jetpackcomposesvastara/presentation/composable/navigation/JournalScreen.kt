@@ -47,7 +47,8 @@ fun JournalScreen() {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 56.dp)
+            .padding(bottom = 56.dp),
+        color = MaterialTheme.colors.background
     ) {
         Row(
             verticalAlignment = Alignment.Bottom,

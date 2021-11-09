@@ -7,11 +7,19 @@ interface RepositoryInterface
 {
     val stepsLiveData: LiveData<Int>
 
+    val distanceLiveData: LiveData<Int>
+
+    val caloriesLiveData: LiveData<Int>
+
+    val goalsStepsLiveData: LiveData<Int>
+
     fun getAsyncTodaySteps()
 
-    fun getTodayCalories(): Flow<Int>
+    fun getTodayCalories()
 
-    fun getTodayDistance(): Flow<Int>
+    fun getTodayDistance()
+
+    fun readStepsGoals()
 
 
 }

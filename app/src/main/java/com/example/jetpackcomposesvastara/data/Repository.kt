@@ -11,10 +11,18 @@ class Repository @Inject constructor(private val googleFitDataSource: GoogleFitD
 {
     override val stepsLiveData: LiveData<Int> = googleFitDataSource.stepsLiveData
 
+    override val caloriesLiveData: LiveData<Int> = googleFitDataSource.caloriesLiveData
+
+    override val distanceLiveData: LiveData<Int> = googleFitDataSource.distanceLiveData
+
+    override val goalsStepsLiveData: LiveData<Int> = googleFitDataSource.goalsStepsLiveData
+
     override fun getAsyncTodaySteps() = googleFitDataSource.getAsyncTodaySteps()
 
-    override fun getTodayCalories(): Flow<Int> = googleFitDataSource.todayCalories
+    override fun getTodayCalories() = googleFitDataSource.getAsyncTodayCalories()
 
-    override fun getTodayDistance(): Flow<Int> = googleFitDataSource.todayDistance
+    override fun getTodayDistance() = googleFitDataSource.getAsyncTodayDistance()
+
+    override fun readStepsGoals() = googleFitDataSource.readStepsGoals()
 
 }
