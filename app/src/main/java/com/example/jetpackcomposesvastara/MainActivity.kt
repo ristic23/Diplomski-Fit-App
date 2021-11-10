@@ -39,6 +39,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.fitness.FitnessActivities
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -87,6 +88,7 @@ class MainActivity : ComponentActivity() {
         startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
 
 
+        FitnessActivities.ZUMBA
     }
 
     //region Auth
