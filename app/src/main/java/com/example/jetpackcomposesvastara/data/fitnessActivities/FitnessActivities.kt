@@ -2,6 +2,7 @@ package com.example.jetpackcomposesvastara.data.fitnessActivities
 
 object FitnessActivities
 {
+    //102 activities
     val activityList: ArrayList<FitnessActivitiesDataObject> = arrayListOf(
         FitnessActivitiesDataObject("Aerobics", "aerobics", calProgress = 0),
         FitnessActivitiesDataObject("American football", "football.american", stepsProgress = 0, calProgress = 0, kmProgress = 0f),
@@ -47,7 +48,74 @@ object FitnessActivities
         FitnessActivitiesDataObject("Inline skating", "skating.inline", calProgress = 0, kmProgress = 0f),
         FitnessActivitiesDataObject("Interval training", "interval_training", stepsProgress = 0, calProgress = 0),
 
+        FitnessActivitiesDataObject("Jogging", "running.jogging", stepsProgress = 0, calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Kayaking", "kayaking", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Kettlebell", "kettlebell_training", calProgress = 0),
+        FitnessActivitiesDataObject("Kick scooter", "kick_scooter", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Kickboxing", "kick_scooter", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Kite skiing", "skiing.kite", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Kitesurfing", "kitesurfing", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Martial arts", "martial_arts", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Meditating", "meditation", calProgress = 0),
+        FitnessActivitiesDataObject("Mixed Martial arts", "martial_arts.mixed", calProgress = 0, stepsProgress = 0),
 
+        FitnessActivitiesDataObject("Mountain biking", "biking.mountain", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Nordic walking", "walking.nordic", calProgress = 0, stepsProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Open water swimming", "swimming.open_water", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Other", "other", calProgress = 0, stepsProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("P90x", "p90x", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Paced walking", "walking", calProgress = 0, stepsProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Paragliding", "paragliding", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Pilates", "pilates", calProgress = 0),
+        FitnessActivitiesDataObject("Polo", "polo", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Pool Swimming", "swimming.pool", calProgress = 0, kmProgress = 0f),
+
+        FitnessActivitiesDataObject("Pushchair walking", "walking.stroller", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Racquetball", "racquetball", calProgress = 0, stepsProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Road biking", "biking.road", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Rock climbing", "rock_climbing", calProgress = 0),
+        FitnessActivitiesDataObject("Roller skiing", "skiing.roller", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Rowing", "rowing", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Rowing machine", "rowing.machine", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Rugby", "rugby", calProgress = 0, stepsProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Running", "running", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Sailing", "sailing", calProgress = 0, kmProgress = 0f),
+
+        FitnessActivitiesDataObject("Skuba diving", "scuba_diving", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Skateboarding", "skateboarding", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Skating", "skating", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Skiing", "skiing", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Skipping rope", "jump_rope", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Sledding", "sledding", calProgress = 0),
+        FitnessActivitiesDataObject("Snowboarding", "snowboarding", calProgress = 0),
+        FitnessActivitiesDataObject("Snowshoeing", "snowshoeing", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Softball", "softball", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Spinning", "biking.spinning", calProgress = 0, kmProgress = 0f),
+
+        FitnessActivitiesDataObject("Squash", "squash", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Stair climbing", "stair_climbing", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Stair climbing machine", "stair_climbing.machine", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Stand-up paddle boarding", "standup_paddleboarding", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Stationary biking", "biking.stationary", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Strength training", "strength_training", calProgress = 0),
+        FitnessActivitiesDataObject("Surfing", "surfing", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Swimming", "swimming", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Table tennis", "table_tennis", calProgress = 0, stepsProgress = 0),
+        FitnessActivitiesDataObject("Tennis", "tennis", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+
+        FitnessActivitiesDataObject("Treadmill running", "running.treadmill", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Treadmill walking", "walking.treadmill", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Utility biking", "biking.utility", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Volleyball", "volleyball", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Wakeboarding", "wakeboarding", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Walking", "walking", calProgress = 0, kmProgress = 0f, stepsProgress = 0),
+        FitnessActivitiesDataObject("Water polo", "water_polo", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Weightlifting", "weightlifting", calProgress = 0),
+        FitnessActivitiesDataObject("Wheelchair", "wheelchair", calProgress = 0, kmProgress = 0f),
+        FitnessActivitiesDataObject("Windsurfing", "windsurfing", calProgress = 0, kmProgress = 0f),
+
+        FitnessActivitiesDataObject("Yoga", "yoga", calProgress = 0),
+        FitnessActivitiesDataObject("Zumba", "zumba", calProgress = 0)
 
     )
 }

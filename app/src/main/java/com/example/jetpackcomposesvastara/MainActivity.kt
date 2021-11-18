@@ -13,13 +13,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -253,7 +257,11 @@ class MainActivity : ComponentActivity() {
         )
         BottomNavigation(
             backgroundColor = MaterialTheme.colors.surface,
-            contentColor = MaterialTheme.colors.onBackground
+            contentColor = MaterialTheme.colors.onBackground,
+            modifier = Modifier.graphicsLayer {
+                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                clip = true
+            }
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
