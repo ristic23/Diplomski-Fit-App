@@ -1,5 +1,7 @@
 package com.example.jetpackcomposesvastara.data.fitnessActivities
 
+import com.example.common.FitnessActivitiesDataObject
+
 object FitnessActivities
 {
     //102 activities

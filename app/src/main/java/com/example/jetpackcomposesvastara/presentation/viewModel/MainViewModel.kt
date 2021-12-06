@@ -2,32 +2,32 @@ package com.example.jetpackcomposesvastara.presentation.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.jetpackcomposesvastara.data.RepositoryInterface
+import com.example.jetpackcomposesvastara.data.RepositoryGoogleFitInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repositoryInterface: RepositoryInterface
+    private val repositoryGoogleFitInterface: RepositoryGoogleFitInterface
 ): ViewModel()
 {
-    val stepsLiveData: LiveData<Int> = repositoryInterface.stepsLiveData
+    val stepsLiveData: LiveData<Int> = repositoryGoogleFitInterface.stepsLiveData
 
-    val caloriesLiveData: LiveData<Int> = repositoryInterface.caloriesLiveData
+    val caloriesLiveData: LiveData<Int> = repositoryGoogleFitInterface.caloriesLiveData
 
-    val distanceLiveData: LiveData<Int> = repositoryInterface.distanceLiveData
+    val distanceLiveData: LiveData<Int> = repositoryGoogleFitInterface.distanceLiveData
 
-    val stepsGoalLiveData: LiveData<Int> = repositoryInterface.goalsStepsLiveData
+    val stepsGoalLiveData: LiveData<Int> = repositoryGoogleFitInterface.goalsStepsLiveData
 
     init {
 
-        repositoryInterface.getAsyncTodaySteps()
+        repositoryGoogleFitInterface.getAsyncTodaySteps()
 
-        repositoryInterface.getTodayCalories()
+        repositoryGoogleFitInterface.getTodayCalories()
 
-        repositoryInterface.getTodayDistance()
+        repositoryGoogleFitInterface.getTodayDistance()
 
-        repositoryInterface.readStepsGoals()
+        repositoryGoogleFitInterface.readStepsGoals()
 
     }
 

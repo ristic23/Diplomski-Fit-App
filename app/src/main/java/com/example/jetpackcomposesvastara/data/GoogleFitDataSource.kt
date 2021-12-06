@@ -14,8 +14,6 @@ import com.google.android.gms.fitness.request.GoalsReadRequest
 import com.google.android.gms.fitness.request.OnDataPointListener
 import com.google.android.gms.fitness.request.SensorRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 

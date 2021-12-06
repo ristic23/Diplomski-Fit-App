@@ -9,7 +9,6 @@ android {
     compileSdk 31
 
     defaultConfig {
-
         minSdk 21
         targetSdk 31
         versionCode 1
@@ -35,20 +34,15 @@ android {
 
 dependencies {
 
-
     implementation project(path: ':common')
+    implementation project(path: ':roomdb')
 
     implementation "androidx.core:core-ktx:$coreKtx"
     implementation "androidx.appcompat:appcompat:$appcompat"
-
-    //Room DB
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt("androidx.room:room-compiler:$roomVersion")
-
     //Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+
 }

@@ -1,9 +1,8 @@
 package com.example.jetpackcomposesvastara.data
 
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.flow.Flow
 
-interface RepositoryInterface
+interface RepositoryGoogleFitInterface
 {
     val stepsLiveData: LiveData<Int>
 

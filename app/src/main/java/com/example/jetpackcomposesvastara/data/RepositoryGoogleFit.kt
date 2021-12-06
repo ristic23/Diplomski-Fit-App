@@ -2,12 +2,10 @@ package com.example.jetpackcomposesvastara.data
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @ExperimentalComposeUiApi
-class Repository @Inject constructor(private val googleFitDataSource: GoogleFitDataSource) : RepositoryInterface
+class RepositoryGoogleFit @Inject constructor(private val googleFitDataSource: GoogleFitDataSource) : RepositoryGoogleFitInterface
 {
     override val stepsLiveData: LiveData<Int> = googleFitDataSource.stepsLiveData
 

@@ -3,13 +3,12 @@ package com.example.jetpackcomposesvastara.di
 import android.content.Context
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.jetpackcomposesvastara.data.GoogleFitDataSource
-import com.example.jetpackcomposesvastara.data.Repository
-import com.example.jetpackcomposesvastara.data.RepositoryInterface
+import com.example.jetpackcomposesvastara.data.RepositoryGoogleFit
+import com.example.jetpackcomposesvastara.data.RepositoryGoogleFitInterface
 import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -22,8 +21,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(googleFitDataSource: GoogleFitDataSource): RepositoryInterface =
-        Repository(googleFitDataSource)
+    fun provideRepositoryGoogleFit(googleFitDataSource: GoogleFitDataSource): RepositoryGoogleFitInterface =
+        RepositoryGoogleFit(googleFitDataSource)
 
     @Singleton
     @Provides
@@ -32,8 +31,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMainViewModel(repositoryInterface: RepositoryInterface): MainViewModel =
-        MainViewModel(repositoryInterface)
+    fun provideMainViewModel(repositoryGoogleFitInterface: RepositoryGoogleFitInterface): MainViewModel =
+        MainViewModel(repositoryGoogleFitInterface)
 
 
 

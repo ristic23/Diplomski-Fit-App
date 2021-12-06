@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.data.fitnessActivities
+package com.example.common
 
 //todo treba i entitet u bazu da napravim koji ce da cuva sve ovo plus title, time, note mozda
 data class FitnessActivitiesDataObject(
