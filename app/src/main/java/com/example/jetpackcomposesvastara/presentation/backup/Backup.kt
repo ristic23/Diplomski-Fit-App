@@ -95,7 +95,7 @@ fun NumberPicker(
     ) {
         val spacing = 4.dp
 
-        val arrowColor = MaterialTheme.colors.onSecondary.copy(alpha = ContentAlpha.disabled)
+//        val arrowColor = MaterialTheme.colors.onSecondary.copy(alpha = ContentAlpha.disabled)
 
 //        Arrow(direction = ArrowDirection.UP, tint = arrowColor)
 

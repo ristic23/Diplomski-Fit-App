@@ -14,6 +14,4 @@ sealed class NavigationItem(
     object Goals : NavigationItem("Goals", R.drawable.ic_goal, "Goals", false)
     object Journal : NavigationItem("Journal", R.drawable.ic_book, "Journal", false)
     object Profile : NavigationItem("profile", R.drawable.ic_profile, "Profile", false)
-
-    object Splash : NavigationItem(route = "splash", title= "Splash")
 }

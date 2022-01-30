@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.common.GoalType
-import com.example.roomdb.utils.JOURNAL_TABLE_TIME
+import com.example.roomdb.utils.GOAL_TABLE_TIME
 import java.util.*
 
-@Entity(tableName = JOURNAL_TABLE_TIME)
+@Entity(tableName = GOAL_TABLE_TIME)
 data class GoalEntity (
     @PrimaryKey(autoGenerate = true) var uid: Int,
     @ColumnInfo(name = "GoalType") var GoalType: GoalType,

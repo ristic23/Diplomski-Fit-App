@@ -17,4 +17,8 @@
 
     <color name="IconWhite">#FFEEEEEE</color>
 
+
+    <color name="done_btn_color">#3AA85A</color>
+    <color name="delete_btn_color">#B13939</color>
+
 </resources>

@@ -6,6 +6,8 @@ data class JournalDataObject (
     var uid: Int,
     var isHydration: Boolean,
     var hydrationValue: String,
+    var journalTime: String,
+    var hydrationDrinkName: String,
     var activityStringValue: String,
     var stepsProgress: Int? = null,
     var calProgress: Int? = null,

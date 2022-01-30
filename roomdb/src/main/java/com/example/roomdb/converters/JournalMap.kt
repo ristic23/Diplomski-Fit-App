@@ -5,24 +5,28 @@ import com.example.roomdb.entity.JournalEntity
 
 fun mapJournalToObjectDTO(input: JournalEntity): JournalDataObject =
     JournalDataObject(
-        input.uid,
-        input.isHydration,
-        input.hydrationValue,
-        input.activityStringValue,
-        input.stepsProgress,
-        input.calProgress,
-        input.kmProgress,
-        input.date
+        uid = input.uid,
+        isHydration = input.isHydration,
+        hydrationValue = input.hydrationValue,
+        journalTime = input.journalTime,
+        hydrationDrinkName = input.hydrationDrinkName,
+        activityStringValue = input.activityStringValue,
+        stepsProgress = input.stepsProgress,
+        calProgress = input.calProgress,
+        kmProgress = input.kmProgress,
+        date = input.date
     )
 
 fun mapJournalToEntityDTO(input: JournalDataObject): JournalEntity =
     JournalEntity(
-        input.uid,
-        input.isHydration,
-        input.hydrationValue,
-        input.activityStringValue,
-        input.stepsProgress,
-        input.calProgress,
-        input.kmProgress,
-        input.date
+        uid = input.uid,
+        isHydration = input.isHydration,
+        hydrationValue = input.hydrationValue,
+        journalTime = input.journalTime,
+        hydrationDrinkName = input.hydrationDrinkName,
+        activityStringValue = input.activityStringValue,
+        stepsProgress = input.stepsProgress,
+        calProgress = input.calProgress,
+        kmProgress = input.kmProgress,
+        date = input.date
     )

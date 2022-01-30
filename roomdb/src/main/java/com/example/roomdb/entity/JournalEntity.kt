@@ -11,6 +11,8 @@ data class JournalEntity (
     @PrimaryKey(autoGenerate = true) var uid: Int,
     @ColumnInfo(name = "IsHydration") var isHydration: Boolean,
     @ColumnInfo(name = "HydrationValue") var hydrationValue: String,
+    @ColumnInfo(name = "JournalTime") var journalTime: String,
+    @ColumnInfo(name = "HydrationDrinkName") var hydrationDrinkName: String,
     @ColumnInfo(name = "ActivityStringValue") var activityStringValue: String,
     @ColumnInfo(name = "StepsProgress") var stepsProgress: Int? = null,
     @ColumnInfo(name = "CalProgress") var calProgress: Int? = null,

@@ -4,8 +4,9 @@ import com.example.common.FitnessActivitiesDataObject
 
 object FitnessActivities
 {
-    //102 activities
-    val activityList: ArrayList<FitnessActivitiesDataObject> = arrayListOf(
+    //103 activities
+    val activityList: List<FitnessActivitiesDataObject> = listOf(
+        FitnessActivitiesDataObject("Arm wrestling", "arm.wrestling", calProgress = 0),
         FitnessActivitiesDataObject("Aerobics", "aerobics", calProgress = 0),
         FitnessActivitiesDataObject("American football", "football.american", stepsProgress = 0, calProgress = 0, kmProgress = 0f),
         FitnessActivitiesDataObject("Australian football", "football.australian", stepsProgress = 0, calProgress = 0, kmProgress = 0f),

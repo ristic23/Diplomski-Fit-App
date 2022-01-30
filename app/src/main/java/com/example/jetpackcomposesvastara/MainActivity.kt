@@ -3,39 +3,35 @@ package com.example.jetpackcomposesvastara
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.jetpackcomposesvastara.data.*
+import com.example.jetpackcomposesvastara.presentation.composable.journals.JournalItemDetails
 import com.example.jetpackcomposesvastara.presentation.composable.navigation.*
-import com.example.jetpackcomposesvastara.presentation.composable.splashScreen.SplashScreen
 import com.example.jetpackcomposesvastara.presentation.theme.DiplomskiTheme
 import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -44,7 +40,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.fitness.FitnessActivities
-import com.google.android.gms.fitness.FitnessOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -150,7 +145,7 @@ class MainActivity : ComponentActivity() {
         if(user != null)
         {
             checkGoogleFitPermissions()
-            val photoUrl = auth.currentUser?.photoUrl
+//            val photoUrl = auth.currentUser?.photoUrl
 //            setContent()
             checkPermissionsAndRun()
         }
@@ -194,6 +189,13 @@ class MainActivity : ComponentActivity() {
 
     //region Composable
 
+    private val items = listOf(
+        NavigationItem.Home,
+        NavigationItem.Goals,
+        NavigationItem.Journal,
+        NavigationItem.Profile
+    )
+
     @ExperimentalComposeUiApi
     @Composable
     fun MainScreen() {
@@ -206,8 +208,17 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {},
                     bottomBar = {
-//                    if (currentRoute(navController) != NavigationItem.Splash.route)
-                        BottomNavigationBar(navController)
+                        var isBottomNavCurrentRoute = false
+                        for(navItem in items)
+                        {
+                            if (currentRoute(navController) == navItem.route)
+                            {
+                                isBottomNavCurrentRoute = true
+                                break
+                            }
+                        }
+                        if(isBottomNavCurrentRoute)
+                            BottomNavigationBar(navController)
                     }
                 ) {
                     Navigation(navController = navController)
@@ -220,9 +231,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun Navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
-            composable(NavigationItem.Splash.route) {
-                SplashScreen(navController)
-            }
             composable(NavigationItem.Home.route) {
                 HomeScreen(mainViewModel)
             }
@@ -230,10 +238,32 @@ class MainActivity : ComponentActivity() {
                 GoalsScreen()
             }
             composable(NavigationItem.Journal.route) {
-                JournalScreen()
+                JournalScreen(navController)
             }
             composable(NavigationItem.Profile.route) {
                 ProfileScreen()
+            }
+            composable(route = "journal_details/{journalUid}/{journalIdentifier}",
+            arguments = listOf(
+                navArgument("journalUid") {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+                navArgument("journalIdentifier") {
+                    type = NavType.StringType
+                    defaultValue = "noID"
+                }
+            )) {
+                val uid = remember {
+                    it.arguments?.getInt("journalUid") ?: -1
+                }
+                val journalIdentifier = remember {
+                    it.arguments?.getString("journalIdentifier") ?: "noID"
+                }
+                JournalItemDetails(
+                    navController = navController,
+                    uid = uid,
+                    identifier = journalIdentifier)
             }
         }
     }
@@ -249,12 +279,6 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun BottomNavigationBar(navController: NavController) {
-        val items = listOf(
-            NavigationItem.Home,
-            NavigationItem.Goals,
-            NavigationItem.Journal,
-            NavigationItem.Profile
-        )
         BottomNavigation(
             backgroundColor = MaterialTheme.colors.surface,
             contentColor = MaterialTheme.colors.onBackground,
