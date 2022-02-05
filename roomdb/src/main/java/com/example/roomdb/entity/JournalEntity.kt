@@ -14,6 +14,7 @@ data class JournalEntity (
     @ColumnInfo(name = "JournalTime") var journalTime: String,
     @ColumnInfo(name = "HydrationDrinkName") var hydrationDrinkName: String,
     @ColumnInfo(name = "ActivityStringValue") var activityStringValue: String,
+    @ColumnInfo(name = "ActivityDuration") var activityDuration: Int,
     @ColumnInfo(name = "StepsProgress") var stepsProgress: Int? = null,
     @ColumnInfo(name = "CalProgress") var calProgress: Int? = null,
     @ColumnInfo(name = "KmProgress") var kmProgress: Float? = null,

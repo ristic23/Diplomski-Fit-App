@@ -1,5 +1,6 @@
 package com.example.roomdb
 
+import android.util.Log
 import com.example.common.GoalDataObject
 import com.example.common.JournalDataObject
 import com.example.roomdb.converters.mapGoalToEntityDTO
@@ -20,9 +21,12 @@ class RoomDBImpl @Inject constructor(
 {
 
     //region Journal
-    suspend fun saveJournal(journalDataObject: JournalDataObject)
-    {
+    suspend fun saveJournal(journalDataObject: JournalDataObject) {
         journalDAO.saveJournal(mapJournalToEntityDTO(journalDataObject))
+    }
+
+    suspend fun updateJournal(journalDataObject: JournalDataObject) {
+        journalDAO.updateJournal(mapJournalToEntityDTO(journalDataObject))
     }
 
     suspend fun readSpecificJournal(uid: Int): JournalDataObject =
@@ -35,6 +39,7 @@ class RoomDBImpl @Inject constructor(
 
     suspend fun getAllJournals(): Flow<List<JournalDataObject>> = flow {
         journalDAO.getAll().collect { list ->
+            Log.v("JournalViewModel", "size 2 = ${list.size}")
             emit(
                 list.map { entity ->
                     mapJournalToObjectDTO(entity)

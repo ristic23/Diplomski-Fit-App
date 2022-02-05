@@ -1,4 +1,4 @@
-package com.example.jetpackcomposesvastara.presentation.composable.general
+package com.example.jetpackcomposesvastara.presentation.composable.journals
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,9 +14,8 @@ import androidx.compose.ui.unit.sp
 import com.example.common.JournalDataObject
 import java.util.*
 
-
 @Composable
-fun JournalWorkoutCard(
+fun JournalHydrationCard(
     journalDataObject: JournalDataObject
 )
 {
@@ -25,7 +24,7 @@ fun JournalWorkoutCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-
+            .padding(top = 8.dp, bottom = 8.dp)
     ) {
         Column(
             modifier = Modifier
@@ -40,7 +39,7 @@ fun JournalWorkoutCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = journalDataObject.activityStringValue,
+                    text = "Hydration",
                     fontSize = 24.sp,
                     color = MaterialTheme.colors.onBackground
                 )
@@ -59,49 +58,77 @@ fun JournalWorkoutCard(
 
             Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
 
-            if(journalDataObject.stepsProgress != null) {
-                RowJournalDesc(
-                    descAction = "Steps",
-                    value = (journalDataObject.stepsProgress ?: 0).toString(),
-                    modifier = Modifier.fillMaxWidth())
+            RowJournalDesc(
+                descAction = "Drink",
+                value = journalDataObject.hydrationDrinkName,
+                modifier = Modifier.fillMaxWidth())
 
-                Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            }
-            if(journalDataObject.calProgress != null) {
-                RowJournalDesc(
-                    descAction = "Energy expended",
-                    value = (journalDataObject.calProgress ?: 0).toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                    suffix = "cal")
+            Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
 
-                Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            }
+            RowJournalDesc(
+                descAction = "Amount",
+                value = journalDataObject.hydrationValue,
+                modifier = Modifier.fillMaxWidth(),
+                suffix = "ml")
 
-            if(journalDataObject.kmProgress != null) {
-                RowJournalDesc(
-                    descAction = "Distance",
-                    value = (journalDataObject.kmProgress ?: 0).toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                    suffix = "km")
-
-                Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            }
+            Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
         }
     }
 }
 
+@Composable
+fun RowJournalDesc(
+    descAction: String,
+    value: String,
+    suffix: String = "",
+    modifier: Modifier
+)
+{
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    )
+    {
+        Text(
+            text = descAction,
+            fontSize = 18.sp,
+            color = MaterialTheme.colors.onBackground
+        )
+
+        Text(
+            text = "$value $suffix",
+            fontSize = 18.sp,
+            color = MaterialTheme.colors.onBackground
+        )
+    }
+}
+
+fun formatDate(date: Date): String
+{
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    return String.format(Locale.ROOT, "%02d.%02d.%02d",
+        calendar.get(Calendar.DAY_OF_MONTH),
+        calendar.get(Calendar.MONTH) + 1,
+        calendar.get(Calendar.YEAR))
+}
+
+
 @Preview
 @Composable
-fun JournalWorkoutCardPreview()
+fun JournalHydrationCardPreview()
 {
     val journalDataObject = JournalDataObject(
         uid = 1,
-        isHydration = false,
-        hydrationValue = "",
+        isHydration = true,
+        hydrationValue = "500",
         journalTime = "11:45",
-        hydrationDrinkName = "",
-        activityStringValue = "Arm Wrestling",
-        calProgress = 127,
+        hydrationDrinkName = "Water",
+        activityStringValue = "",
+        stepsProgress = 0,
+        calProgress = 0,
+        kmProgress = 0f,
         date = Calendar.getInstance().time
     )
     Card(
@@ -119,12 +146,12 @@ fun JournalWorkoutCardPreview()
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = journalDataObject.activityStringValue,
+                    text = "Hydration",
                     fontSize = 24.sp,
                     color = MaterialTheme.colors.onBackground
                 )
@@ -143,33 +170,20 @@ fun JournalWorkoutCardPreview()
 
             Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
 
-            if(journalDataObject.stepsProgress != null) {
-                RowJournalDesc(
-                    descAction = "Steps",
-                    value = (journalDataObject.stepsProgress ?: 0).toString(),
-                    modifier = Modifier.fillMaxWidth())
+            RowJournalDesc(
+                descAction = "Drink",
+                value = journalDataObject.hydrationDrinkName,
+                modifier = Modifier.fillMaxWidth())
 
-                Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            }
-            if(journalDataObject.calProgress != null) {
-                RowJournalDesc(
-                    descAction = "Energy expended",
-                    value = (journalDataObject.calProgress ?: 0).toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                    suffix = "cal")
+            Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
 
-                Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            }
+            RowJournalDesc(
+                descAction = "Amount",
+                value = journalDataObject.hydrationValue,
+                modifier = Modifier.fillMaxWidth(),
+                suffix = "ml")
 
-            if(journalDataObject.kmProgress != null) {
-                RowJournalDesc(
-                    descAction = "Distance",
-                    value = (journalDataObject.kmProgress ?: 0).toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                    suffix = "km")
-
-                Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            }
+            Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
         }
     }
 }

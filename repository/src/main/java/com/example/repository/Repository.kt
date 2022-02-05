@@ -12,7 +12,12 @@ class Repository @Inject constructor(private val roomDbImpl: RoomDBImpl) : Repos
     //region Journal
 
     override suspend fun saveJournal(journalDataObject: JournalDataObject) {
+        journalDataObject.uid = 0
         roomDbImpl.saveJournal(journalDataObject)
+    }
+
+    override suspend fun updateJournal(journalDataObject: JournalDataObject) {
+        roomDbImpl.updateJournal(journalDataObject)
     }
 
     override suspend fun readSpecificJournal(uid: Int): JournalDataObject =

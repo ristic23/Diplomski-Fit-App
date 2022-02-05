@@ -10,6 +10,8 @@ interface RepositoryInterface
     //region Journal
     suspend fun saveJournal(journalDataObject: JournalDataObject)
 
+    suspend fun updateJournal(journalDataObject: JournalDataObject)
+
     suspend fun readSpecificJournal(uid: Int): JournalDataObject
 
     suspend fun deleteJournal(journalDataObject: JournalDataObject)

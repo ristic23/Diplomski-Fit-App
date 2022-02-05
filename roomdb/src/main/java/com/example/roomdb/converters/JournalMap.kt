@@ -14,7 +14,8 @@ fun mapJournalToObjectDTO(input: JournalEntity): JournalDataObject =
         stepsProgress = input.stepsProgress,
         calProgress = input.calProgress,
         kmProgress = input.kmProgress,
-        date = input.date
+        date = input.date,
+        activityDuration = input.activityDuration
     )
 
 fun mapJournalToEntityDTO(input: JournalDataObject): JournalEntity =
@@ -28,5 +29,6 @@ fun mapJournalToEntityDTO(input: JournalDataObject): JournalEntity =
         stepsProgress = input.stepsProgress,
         calProgress = input.calProgress,
         kmProgress = input.kmProgress,
-        date = input.date
+        date = input.date,
+        activityDuration = input.activityDuration
     )

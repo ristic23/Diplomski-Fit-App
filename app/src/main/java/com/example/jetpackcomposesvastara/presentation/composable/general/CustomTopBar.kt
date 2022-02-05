@@ -108,7 +108,8 @@ fun CustomOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     fieldClicked: () -> Unit,
-    enabled: Boolean
+    enabled: Boolean,
+    keyboardType: KeyboardType
 )
 {
     var inputValue by remember { mutableStateOf(TextFieldValue(value))}
@@ -151,7 +152,7 @@ fun CustomOutlinedTextField(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Number),
+                keyboardType = keyboardType),
             label = {
                 Text(
                     text = inputHint,

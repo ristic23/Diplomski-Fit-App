@@ -8,15 +8,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.common.FitnessActivitiesDataObject
+import com.example.common.JournalDataObject
 import com.example.jetpackcomposesvastara.R
 import com.example.jetpackcomposesvastara.data.fitnessActivities.FitnessActivities
 import com.example.jetpackcomposesvastara.presentation.composable.general.DetailsTopBar
@@ -27,10 +31,15 @@ import com.example.jetpackcomposesvastara.presentation.composable.general.RowWit
 fun JournalItemDetails(
     navController: NavController,
     uid: Int,
-    identifier: String
+    identifier: String,
+    viewModel: JournalItemDetailsViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
     var openDialog by remember { mutableStateOf(false)  }
+
+    val journalDataObject by viewModel.journalDataObject.observeAsState(JournalDataObject())
+    if(uid != -1)
+        viewModel.getSpecificJournalDataObject(uid)
 
     Column(
         modifier = Modifier
@@ -48,15 +57,20 @@ fun JournalItemDetails(
                 else -> "Error"
             },
             deleteClicked = {
-                //todo
+                viewModel.deleteJournalDataObject(journalDataObject) {
+                    navController.popBackStack()
+                }
             },
             doneClicked = {
-                //todo
+                viewModel.saveOrUpdateJournalDataObject(journalDataObject) {
+                    navController.popBackStack()
+                }
             },
             uid = uid
         )
         if(identifier == "hydration")
         {
+            journalDataObject.isHydration = true
             //Hydration
             RowWithDescAndAction(
                 value = "14:44",
@@ -69,17 +83,23 @@ fun JournalItemDetails(
             )
             CustomOutlinedTextField(
                 inputHint = "Add ml",
-                value = "",
-                onValueChange = {},
+                value = journalDataObject.hydrationValue,
+                onValueChange = {
+                    journalDataObject.hydrationValue = it
+                },
                 fieldClicked = {},
-                enabled = true
+                enabled = true,
+                keyboardType = KeyboardType.Number
             )
             CustomOutlinedTextField(
                 inputHint = "Drink Name",
-                value = "",
-                onValueChange = {},
+                value = journalDataObject.hydrationDrinkName,
+                onValueChange = {
+                    journalDataObject.hydrationDrinkName = it
+                },
                 fieldClicked = {},
-                enabled = true
+                enabled = true,
+                keyboardType = KeyboardType.Text
             )
             Divider(
                 modifier = Modifier.fillMaxWidth(),
@@ -88,20 +108,24 @@ fun JournalItemDetails(
         }
         else
         {
+            journalDataObject.isHydration = false
             //Workout
             CustomOutlinedTextField(
                 inputHint = "Title",
-                value = "",
-                onValueChange = {},
+                value = journalDataObject.hydrationDrinkName,
+                onValueChange = {
+                    journalDataObject.hydrationDrinkName = it
+                },
                 fieldClicked = {},
-                enabled = true
+                enabled = true,
+                keyboardType = KeyboardType.Text
             )
             Divider(
                 modifier = Modifier.fillMaxWidth(),
                 color = colorResource(id = R.color.MediumGray)
             )
             RowWithDescAndAction(
-                value = "Running",
+                value = journalDataObject.activityStringValue,
                 descAction = "Activity",
                 fieldClicked = {
                     openDialog = true
@@ -117,7 +141,7 @@ fun JournalItemDetails(
                 fieldClicked = {}
             )
             RowWithDescAndAction(
-                value = "30",
+                value = journalDataObject.activityDuration.toString(),
                 descAction = "Duration",
                 suffix = "min",
                 fieldClicked = {}
@@ -126,33 +150,44 @@ fun JournalItemDetails(
                 modifier = Modifier.fillMaxWidth(),
                 color = colorResource(id = R.color.MediumGray)
             )
-            CustomOutlinedTextField(
-                inputHint = "Distance in km",
-                value = "",
-                onValueChange = {},
-                fieldClicked = {},
-                enabled = true
-            )
-            CustomOutlinedTextField(
-                inputHint = "Steps",
-                value = "",
-                onValueChange = {},
-                fieldClicked = {},
-                enabled = true
-            )
-            CustomOutlinedTextField(
-                inputHint = "Calories",
-                value = "",
-                onValueChange = {},
-                fieldClicked = {},
-                enabled = true
-            )
+            if(journalDataObject.kmProgress != null)
+                CustomOutlinedTextField(
+                    inputHint = "Distance in km",
+                    value = if(journalDataObject.kmProgress == 0f) "" else journalDataObject.kmProgress.toString(),
+                    onValueChange = {
+                        journalDataObject.kmProgress = if(it.isEmpty()) null else it.toFloat()
+                    },
+                    fieldClicked = {},
+                    enabled = true,
+                    keyboardType = KeyboardType.Number
+                )
+            if(journalDataObject.stepsProgress != null)
+                CustomOutlinedTextField(
+                    inputHint = "Steps",
+                    value = if(journalDataObject.stepsProgress == 0) "" else journalDataObject.stepsProgress.toString(),
+                    onValueChange = {
+                        journalDataObject.stepsProgress = if(it.isEmpty()) null else it.toInt()
+                    },
+                    fieldClicked = {},
+                    enabled = true,
+                    keyboardType = KeyboardType.Number
+                )
+            if(journalDataObject.calProgress != null)
+                CustomOutlinedTextField(
+                    inputHint = "Calories",
+                    value = if(journalDataObject.calProgress == 0) "" else journalDataObject.calProgress.toString(),
+                    onValueChange = {
+                        journalDataObject.calProgress = if(it.isEmpty()) null else it.toInt()
+                    },
+                    fieldClicked = {},
+                    enabled = true,
+                    keyboardType = KeyboardType.Number
+                )
             Divider(
                 modifier = Modifier.fillMaxWidth(),
                 color = colorResource(id = R.color.MediumGray)
             )
         }
-
 
         if (openDialog) {
             ShowActivitiesDialog(
@@ -160,7 +195,10 @@ fun JournalItemDetails(
                     openDialog = false
                 },
                 onItemClicked = {
-                    //todo update UI for new activity
+                    journalDataObject.activityStringValue = it.activityName
+                    journalDataObject.kmProgress = it.kmProgress
+                    journalDataObject.calProgress = it.calProgress
+                    journalDataObject.stepsProgress = it.stepsProgress
                     openDialog = false
                 }
             )
