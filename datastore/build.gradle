@@ -28,20 +28,22 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    hilt {
+        enableExperimentalClasspathAggregation = true
+    }
 }
 
 dependencies {
 
     implementation project(path: ':common')
-    implementation project(path: ':roomdb')
-    implementation project(path: ':datastore')
 
     implementation "androidx.core:core-ktx:$coreKtx"
     implementation "androidx.appcompat:appcompat:$appcompat"
+
     //Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
-
+    //Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }

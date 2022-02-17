@@ -1,9 +1,6 @@
 package com.example.jetpackcomposesvastara.presentation.viewModel
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.common.JournalDataObject

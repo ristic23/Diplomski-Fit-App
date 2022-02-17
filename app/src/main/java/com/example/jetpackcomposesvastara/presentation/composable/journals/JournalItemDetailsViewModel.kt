@@ -3,7 +3,7 @@ package com.example.jetpackcomposesvastara.presentation.composable.journals
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.common.JournalDataObject
-import com.example.repository.Repository
+import com.example.repository.RepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JournalItemDetailsViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: RepositoryInterface
 ) : ViewModel()
 {
 
@@ -23,7 +23,7 @@ class JournalItemDetailsViewModel @Inject constructor(
     fun getSpecificJournalDataObject(uid: Int)
     {
         CoroutineScope(Dispatchers.IO).launch {
-            journalDataObject.value = repository.readSpecificJournal(uid)
+            journalDataObject.postValue(repository.readSpecificJournal(uid))
         }
     }
 

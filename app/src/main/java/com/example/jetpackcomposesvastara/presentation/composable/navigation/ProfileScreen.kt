@@ -1,6 +1,5 @@
 package com.example.jetpackcomposesvastara.presentation.composable.navigation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,25 +19,20 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.jetpackcomposesvastara.R
-import com.example.jetpackcomposesvastara.presentation.composable.util.Gender
-import com.example.jetpackcomposesvastara.presentation.composable.util.ProfileClickData
 import com.example.jetpackcomposesvastara.presentation.viewModel.ProfileViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.common.Gender
+import com.example.jetpackcomposesvastara.presentation.composable.util.Date
 import java.util.*
 import java.util.Calendar.*
-
-//val context = LocalContext.current
 
 @ExperimentalComposeUiApi
 @Preview(showBackground = true)
@@ -53,9 +47,7 @@ fun ProfileScreen() {
     var expanded by remember {
         mutableStateOf(false)
     }
-    val profileClickData by remember {
-        mutableStateOf(ProfileClickData())
-    }
+
     var textFieldSize by remember {
         mutableStateOf(Size.Zero)
     }
@@ -65,11 +57,18 @@ fun ProfileScreen() {
     else
         Icons.Filled.KeyboardArrowDown
 
-    val viewModel :ProfileViewModel = viewModel()
+    val viewModel: ProfileViewModel = hiltViewModel()
     val currContext = LocalContext.current
-    val date = viewModel.time.observeAsState()
-
-    profileClickData.birthDay.fromString(date.value)
+    val firstName by viewModel.firstNameLiveData.observeAsState("")
+    val lastName by viewModel.lastNameLiveData.observeAsState("")
+    val gender by viewModel.genderLiveData.observeAsState(Gender.Male)
+    val birthday by viewModel.birthdayLiveData.observeAsState(Date(
+        getInstance().get(DAY_OF_MONTH),
+        getInstance().get(MONTH) + 1,
+        getInstance().get(YEAR),
+    ).toString())
+    val weight by viewModel.weightLiveData.observeAsState(0)
+    val height by viewModel.heightLiveData.observeAsState(0)
 
     Column(
         modifier = Modifier
@@ -81,51 +80,38 @@ fun ProfileScreen() {
         val profileRowModifier = Modifier
             .padding(5.dp)
             .weight(1f)
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth())
-        {
-            ShowProfileValue(
-                labelText = "Steps",
-                value = profileClickData.stepsValue.toString(),
-                fieldClicked = {
-                },
-                modifier = profileRowModifier,
-                enabled = true,
-                keyboardType = KeyboardType.Number,
-                updateValue = {
-                    profileClickData.stepsValue = if(it.isEmpty()) 0 else it.toInt()
-                }
-            )
-        }
-        Spacer(modifier = Modifier.height(20.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth())
         {
             ShowProfileValue(
                 labelText = "First Name",
-                value = profileClickData.firstName,
+                value = firstName,
                 fieldClicked = {
                 },
                 modifier = profileRowModifier,
                 enabled = true,
                 keyboardType = KeyboardType.Text,
                 updateValue = {
-                    profileClickData.firstName = it
+//                    firstName = it
+                },
+                notFocusedListener = {
+                    viewModel.setNewFirstName(it)
                 }
             )
             ShowProfileValue(
                 labelText = "Last Name",
-                value = profileClickData.lastName ,
+                value = lastName,
                 fieldClicked = {
                 },
                 modifier = profileRowModifier,
                 enabled = true,
                 keyboardType = KeyboardType.Text,
                 updateValue = {
-                    profileClickData.lastName = it
+//                    lastName = it
+                },
+                notFocusedListener = {
+                    viewModel.setNewLastName(it)
                 }
             )
         }
@@ -138,7 +124,7 @@ fun ProfileScreen() {
             {
                 ShowProfileValueGender(
                     labelText = "Gender",
-                    value = profileClickData.gender.toString(),
+                    value = gender.toString(),
                     fieldClicked = {
                         expanded = !expanded
                     },
@@ -155,13 +141,13 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .width(with(LocalDensity.current){textFieldSize.width.toDp()})
                 ) {
-                    suggestions.forEach { gender ->
+                    suggestions.forEach { newGender ->
                         DropdownMenuItem(onClick = {
-                            profileClickData.gender = gender
+                            viewModel.setNewGender(newGender)
                             expanded = false
                         }) {
                             Text(
-                                text = gender.toString(),
+                                text = newGender.toString(),
                                 color = MaterialTheme.colors.onBackground,
                                 fontSize = 16.sp
                             )
@@ -171,9 +157,11 @@ fun ProfileScreen() {
             }
             ShowProfileValueBirthday(
                 labelText = "Birthday",
-                value = profileClickData.birthDay.toString(),
+                value = birthday.toString(),
                 fieldClicked = {
-                    viewModel.selectDateTime(currContext)
+                    viewModel.selectDateTime(currContext) {
+                        viewModel.setNewBirthday(it)
+                    }
                 },
                 modifier = profileRowModifier
             )
@@ -185,7 +173,7 @@ fun ProfileScreen() {
         {
             ShowProfileValue(
                 labelText = "Weight",
-                value = "${profileClickData.weight}",
+                value = weight.toString(),
                 fieldClicked = {
                 },
                 modifier = profileRowModifier,
@@ -193,12 +181,15 @@ fun ProfileScreen() {
                 keyboardType = KeyboardType.Number,
                 suffix = "kg",
                 updateValue = {
-                    profileClickData.weight = if(it.isEmpty()) 0 else it.removeSuffix("kg").toInt()
+//                    viewModel.we = if(it.isEmpty()) 0 else it.removeSuffix("kg").toInt()
+                },
+                notFocusedListener = {
+                    viewModel.setNewWeight(if(it.isEmpty()) 0 else it.removeSuffix("kg").toInt())
                 }
             )
             ShowProfileValue(
                 labelText = "Height",
-                value = "${profileClickData.height}",
+                value = height.toString(),
                 fieldClicked = {
                 },
                 modifier = profileRowModifier,
@@ -206,7 +197,10 @@ fun ProfileScreen() {
                 keyboardType = KeyboardType.Number,
                 suffix = "cm",
                 updateValue = {
-                    profileClickData.height = if(it.isEmpty()) 0 else it.removeSuffix("cm").toInt()
+//                    viewModel.height = if(it.isEmpty()) 0 else it.removeSuffix("cm").toInt()
+                },
+                notFocusedListener = {
+                    viewModel.setNewHeight(if(it.isEmpty()) 0 else it.removeSuffix("cm").toInt())
                 }
             )
         }
@@ -227,17 +221,24 @@ fun ShowProfileValue(
     enabled: Boolean,
     keyboardType: KeyboardType,
     suffix: String = "",
-    updateValue: (String) -> Unit
+    updateValue: (String) -> Unit,
+    notFocusedListener: (String) -> Unit
 )
 {
-    var newValue by remember {
+//    var newValue by remember {
+//        mutableStateOf(value)
+//    }
+    var newValue by remember(key1 = value) {
         mutableStateOf(value)
     }
+
     val focusedColorValue = Color(255, 255,255,191)
     val notFocusedColorValue = Color(255, 255,255,128)
     var focusedColor by remember {
         mutableStateOf(focusedColorValue)
     }
+
+    var hasFocus by remember { mutableStateOf(false) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -250,6 +251,7 @@ fun ShowProfileValue(
                 {
                     if(it[it.length - 1].isDigit())
                     {
+                        newValue = if(newValue.isNotEmpty() && newValue == "0") "" else newValue
                         newValue = "$newValue${it[it.length - 1]}"
                         updateValue.invoke("$newValue$suffix")
                     }
@@ -270,10 +272,14 @@ fun ShowProfileValue(
                 else
                 {
 
-                    newValue = if(keyboardType == KeyboardType.Number && !it[it.length - 1].isDigit())
+                    newValue = if(keyboardType == KeyboardType.Number && it.isNotEmpty() && !it[it.length - 1].isDigit())
                         it.dropLast(1)
-                    else
-                        it
+                    else {
+                        if (it.isNotEmpty() && it[0].isDigit() && it[0].digitToInt() == 0)
+                            it.removeRange(0, 1)
+                        else
+                            it
+                    }
                     updateValue.invoke(newValue)
                 }
 
@@ -292,10 +298,15 @@ fun ShowProfileValue(
                     fieldClicked()
             }
             .onFocusChanged {
-                focusedColor = if (it.isFocused)
+                focusedColor = if (it.isFocused) {
+                    hasFocus = true
                     focusedColorValue
-                else
+                } else
                     notFocusedColorValue
+                if (!it.isFocused && hasFocus) {
+                    hasFocus = false
+                    notFocusedListener.invoke(newValue)
+                }
             },
         enabled = enabled,
         textStyle = TextStyle(
@@ -434,97 +445,3 @@ fun ShowProfileValueGender(
     )
 }
 
-@Composable
-fun DialogWithIncrementOption(
-    profileClickData :ProfileClickData,
-    buttonClick: (ProfileClickData, Boolean) -> Unit
-//todo ubaci composable za prikaz contenta dialoga
-)
-{
-    val openDialog = remember { mutableStateOf(true) }
-
-    if (openDialog.value)
-    {
-        AlertDialog(
-            onDismissRequest = {
-                openDialog.value = false
-                buttonClick.invoke(profileClickData, false)
-           },
-            title = {
-                Text(
-                    text = profileClickData.titleDialog,
-                    color = MaterialTheme.colors.onBackground,
-                    fontSize = 30.sp
-                )
-            },
-            text = {
-                   //todo content for inc and dec value
-                   Row (
-                       modifier = Modifier
-                           .fillMaxWidth(),
-                       horizontalArrangement = Arrangement.Center,
-                       verticalAlignment = Alignment.CenterVertically
-                   )
-                   {
-//                     TODO update with composable
-                       Image (
-                           painter = painterResource(id = R.drawable.ic_minus),
-                           contentDescription = "Minus button",
-                           modifier = Modifier
-                               .height(40.dp)
-                               .width(40.dp)
-                               .clickable {
-//                                   newProgress.value = newProgress.value - progressStep
-//                                   todo update with composable
-                               },
-                           alignment = Alignment.Center
-                       )
-                       Spacer(modifier = Modifier.width(10.dp))
-                       Text(
-                           text = "awdaw",//newProgress.value.toString(),
-                           color = MaterialTheme.colors.onBackground,
-                           fontSize = 25.sp,
-                           textAlign = TextAlign.Center
-                       )
-                       Spacer(modifier = Modifier.width(10.dp))
-                       Image (
-                           painter = painterResource(id = R.drawable.ic_plus),
-                           contentDescription = "Plus button",
-                           modifier = Modifier
-                               .height(40.dp)
-                               .width(40.dp)
-                               .clickable {
-//                                   newProgress.value = newProgress.value + progressStep
-//                                   todo update with composable
-                               },
-                           alignment = Alignment.Center
-                       )
-                   }
-
-                   },
-
-            confirmButton = {
-
-                TextButton(
-                    onClick = {
-                        buttonClick.invoke(profileClickData, true)
-                        openDialog.value = false
-                    }) {
-                    Text(text = "Confirm", color = MaterialTheme.colors.onBackground)
-                }
-
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
-                        buttonClick.invoke(profileClickData, false)
-                    }) {
-                    Text(text = "Dismiss", color = MaterialTheme.colors.onBackground)
-                }
-            },
-            backgroundColor = MaterialTheme.colors.surface,
-            contentColor = MaterialTheme.colors.background,
-        )
-    }
-}

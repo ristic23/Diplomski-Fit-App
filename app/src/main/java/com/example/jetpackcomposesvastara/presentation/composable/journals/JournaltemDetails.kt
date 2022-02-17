@@ -36,10 +36,11 @@ fun JournalItemDetails(
 ) {
     val scrollState = rememberScrollState()
     var openDialog by remember { mutableStateOf(false)  }
+    var uidRemember by remember { mutableStateOf(uid)  }
 
     val journalDataObject by viewModel.journalDataObject.observeAsState(JournalDataObject())
-    if(uid != -1)
-        viewModel.getSpecificJournalDataObject(uid)
+    if(uidRemember != -1)
+        viewModel.getSpecificJournalDataObject(uidRemember)
 
     Column(
         modifier = Modifier
@@ -58,15 +59,17 @@ fun JournalItemDetails(
             },
             deleteClicked = {
                 viewModel.deleteJournalDataObject(journalDataObject) {
+                    uidRemember = -1
                     navController.popBackStack()
                 }
             },
             doneClicked = {
                 viewModel.saveOrUpdateJournalDataObject(journalDataObject) {
+                    uidRemember = -1
                     navController.popBackStack()
                 }
             },
-            uid = uid
+            uid = uidRemember
         )
         if(identifier == "hydration")
         {

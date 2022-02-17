@@ -6,6 +6,7 @@ import com.example.jetpackcomposesvastara.data.GoogleFitDataSource
 import com.example.jetpackcomposesvastara.data.RepositoryGoogleFit
 import com.example.jetpackcomposesvastara.data.RepositoryGoogleFitInterface
 import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
+import com.example.repository.RepositoryInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,8 +32,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMainViewModel(repositoryGoogleFitInterface: RepositoryGoogleFitInterface): MainViewModel =
-        MainViewModel(repositoryGoogleFitInterface)
+    fun provideMainViewModel(repositoryGoogleFitInterface: RepositoryGoogleFitInterface,
+                             repositoryInterface: RepositoryInterface
+    ): MainViewModel =
+        MainViewModel(repositoryGoogleFitInterface, repositoryInterface)
 
 
 

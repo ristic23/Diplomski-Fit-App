@@ -1,5 +1,6 @@
 package com.example.repository.di
 
+import com.example.datastore.DataStoreManager
 import com.example.repository.Repository
 import com.example.repository.RepositoryInterface
 import com.example.roomdb.RoomDBImpl
@@ -15,6 +16,9 @@ object RepositoryModule
 {
     @Singleton
     @Provides
-    fun provideRepository(roomDbImpl: RoomDBImpl): RepositoryInterface =
-        Repository(roomDbImpl)
+    fun provideRepository(
+        roomDbImpl: RoomDBImpl,
+        dataStoreManager: DataStoreManager
+    ): RepositoryInterface =
+        Repository(roomDbImpl, dataStoreManager)
 }

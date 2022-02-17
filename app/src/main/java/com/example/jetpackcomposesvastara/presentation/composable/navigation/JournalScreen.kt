@@ -121,11 +121,17 @@ fun JournalScreen(
                 items(journalsList.size) { index ->
                     if(journalsList[index].isHydration)
                     {
-                        JournalHydrationCard(journalDataObject = journalsList[index])
+                        JournalHydrationCard(journalDataObject = journalsList[index]) {
+                            val tempIdentifier = if(it.isHydration) "hydration" else "workout"
+                            navController.navigate("journal_details/${it.uid}/$tempIdentifier")
+                        }
                     }
                     else
                     {
-                        JournalWorkoutCard(journalDataObject = journalsList[index])
+                        JournalWorkoutCard(journalDataObject = journalsList[index]) {
+                            val tempIdentifier = if(it.isHydration) "hydration" else "workout"
+                            navController.navigate("journal_details/${it.uid}/$tempIdentifier")
+                        }
                     }
                 }
             }

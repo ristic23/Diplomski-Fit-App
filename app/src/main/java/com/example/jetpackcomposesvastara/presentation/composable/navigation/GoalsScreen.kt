@@ -1,39 +1,56 @@
 package com.example.jetpackcomposesvastara.presentation.composable.navigation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcomposesvastara.presentation.viewModel.GoalViewModel
 
 
+@ExperimentalComposeUiApi
 @Composable
 fun GoalsScreen() {
+
+    val viewModel: GoalViewModel = hiltViewModel()
+
+    val stepDailyGoal by viewModel.stepsLiveData.observeAsState(0)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
-        Text(
-            text = "Goals View",
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onBackground,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            fontSize = 25.sp
-        )
-    }
-}
+        val profileRowModifier = Modifier
+            .padding(5.dp)
+            .weight(1f)
 
-@Preview(showBackground = true)
-@Composable
-fun MusicScreenPreview() {
-    GoalsScreen()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth())
+        {
+            ShowProfileValue(
+                labelText = "Steps",
+                value = stepDailyGoal.toString(),
+                fieldClicked = {
+                },
+                modifier = profileRowModifier,
+                enabled = true,
+                keyboardType = KeyboardType.Number,
+                updateValue = {
+//                    if(it.isEmpty()) viewModel.stepsLiveData.postValue(0)
+                },
+                notFocusedListener = {
+                    viewModel.setNewStepGoal(if(it.isEmpty()) 0 else it.toInt())
+                    if(it.isEmpty()) viewModel.stepsLiveData.postValue(0)
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+    }
 }

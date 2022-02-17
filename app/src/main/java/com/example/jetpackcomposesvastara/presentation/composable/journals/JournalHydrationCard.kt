@@ -1,5 +1,6 @@
 package com.example.jetpackcomposesvastara.presentation.composable.journals
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -16,7 +17,8 @@ import java.util.*
 
 @Composable
 fun JournalHydrationCard(
-    journalDataObject: JournalDataObject
+    journalDataObject: JournalDataObject,
+    itemClicked: (JournalDataObject) -> Unit
 )
 {
     Card(
@@ -25,6 +27,9 @@ fun JournalHydrationCard(
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(top = 8.dp, bottom = 8.dp)
+            .clickable {
+                itemClicked.invoke(journalDataObject)
+            }
     ) {
         Column(
             modifier = Modifier

@@ -33,7 +33,6 @@ import com.example.jetpackcomposesvastara.data.*
 import com.example.jetpackcomposesvastara.presentation.composable.journals.JournalItemDetails
 import com.example.jetpackcomposesvastara.presentation.composable.navigation.*
 import com.example.jetpackcomposesvastara.presentation.theme.DiplomskiTheme
-import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -46,7 +45,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 const val TAG = "DiplomskiMainActivity"
 
@@ -69,9 +67,6 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
-
-    @Inject
-    lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -232,7 +227,7 @@ class MainActivity : ComponentActivity() {
     fun Navigation(navController: NavHostController) {
         NavHost(navController, startDestination = NavigationItem.Home.route) {
             composable(NavigationItem.Home.route) {
-                HomeScreen(mainViewModel)
+                HomeScreen()
             }
             composable(NavigationItem.Goals.route) {
                 GoalsScreen()

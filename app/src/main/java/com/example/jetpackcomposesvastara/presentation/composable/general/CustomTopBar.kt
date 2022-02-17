@@ -112,7 +112,13 @@ fun CustomOutlinedTextField(
     keyboardType: KeyboardType
 )
 {
-    var inputValue by remember { mutableStateOf(TextFieldValue(value))}
+    var inputValue by remember(key1 = value) { mutableStateOf(value) }
+//    var isUpdateNeeded by remember { mutableStateOf(true) }
+//
+//    if(value.isNotEmpty() && isUpdateNeeded && inputValue.isEmpty()) {
+//        inputValue = value
+//        isUpdateNeeded = false
+//    }
 
     val focusedColorValue = colorResource(id = R.color.TextWhite)
     val notFocusedColorValue = colorResource(id = R.color.LightGray)
@@ -147,7 +153,7 @@ fun CustomOutlinedTextField(
             value = inputValue,
             onValueChange = {
                 inputValue = it
-                onValueChange.invoke(it.text)
+                onValueChange.invoke(it)
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -184,7 +190,7 @@ fun RowWithDescAndAction(
             .height(60.dp)
             .padding(8.dp)
             .clickable {
-               fieldClicked.invoke()
+                fieldClicked.invoke()
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

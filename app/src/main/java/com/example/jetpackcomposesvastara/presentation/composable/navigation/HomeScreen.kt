@@ -11,6 +11,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcomposesvastara.R
 import com.example.jetpackcomposesvastara.presentation.composable.LinearProgressBar
@@ -20,8 +21,9 @@ import com.example.jetpackcomposesvastara.util.Constants.largeRoundedCorner
 
 
 @Composable
-fun HomeScreen(viewModel : MainViewModel) {
+fun HomeScreen() {
     val scrollState = rememberScrollState()
+    val viewModel : MainViewModel = hiltViewModel()
 
 //    val viewModel = viewModel(MainViewModel::class.java)
 
@@ -35,24 +37,11 @@ fun HomeScreen(viewModel : MainViewModel) {
 
 @Composable
 fun CurrentProgressCard(viewModel: MainViewModel) {
-    var stepsNumber by remember {
-        mutableStateOf(0)
-    }
 
-    var stepsGoalNumber by remember {
-        mutableStateOf(1)
-    }
-    var caloriesNumber by remember {
-        mutableStateOf(0)
-    }
-    var distanceNumber by remember {
-        mutableStateOf(0)
-    }
-
-    stepsNumber = viewModel.stepsLiveData.observeAsState(initial = 0).value
-    caloriesNumber = viewModel.caloriesLiveData.observeAsState(initial = 0).value
-    distanceNumber = viewModel.distanceLiveData.observeAsState(initial = 0).value
-    stepsGoalNumber = viewModel.stepsGoalLiveData.observeAsState(initial = 0).value
+    val stepsNumber = viewModel.stepsLiveData.observeAsState(0).value
+    val caloriesNumber = viewModel.caloriesLiveData.observeAsState(initial = 0).value
+    val distanceNumber = viewModel.distanceLiveData.observeAsState(initial = 0).value
+    val stepsGoalNumber = viewModel.stepsGoalLiveData.observeAsState(initial = 0).value
 
     Column {
         Surface(
