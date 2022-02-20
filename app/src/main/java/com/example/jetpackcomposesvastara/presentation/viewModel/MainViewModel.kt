@@ -2,9 +2,11 @@ package com.example.jetpackcomposesvastara.presentation.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.jetpackcomposesvastara.data.RepositoryGoogleFitInterface
 import com.example.repository.RepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +35,9 @@ class MainViewModel @Inject constructor(
 
     }
 
+    fun setNewStepGoal(newValue: Int) = viewModelScope.launch {
+        repositoryInterface.setNewStepDailyGoal(newValue)
+    }
 
 
 }

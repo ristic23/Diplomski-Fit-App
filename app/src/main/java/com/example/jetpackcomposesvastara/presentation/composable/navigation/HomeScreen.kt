@@ -42,6 +42,7 @@ fun CurrentProgressCard(viewModel: MainViewModel) {
     val caloriesNumber = viewModel.caloriesLiveData.observeAsState(initial = 0).value
     val distanceNumber = viewModel.distanceLiveData.observeAsState(initial = 0).value
     val stepsGoalNumber = viewModel.stepsGoalLiveData.observeAsState(initial = 0).value
+    viewModel.setNewStepGoal(stepsGoalNumber)
 
     Column {
         Surface(

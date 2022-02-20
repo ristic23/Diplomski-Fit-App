@@ -10,10 +10,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.data.*
 import com.google.android.gms.fitness.data.Goal.*
+import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.fitness.request.GoalsReadRequest
 import com.google.android.gms.fitness.request.OnDataPointListener
 import com.google.android.gms.fitness.request.SensorRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.lang.IllegalArgumentException
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 
@@ -52,6 +57,7 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
                 stepsMutable.postValue(total)
             }
         getDataUsingSensor(TYPE_STEP_COUNT_DELTA, stepsListener)
+        getAllHistory()
     }
 
     private fun subscribeAndRecordData(dataType: DataType) {
@@ -82,13 +88,18 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
     }
 
     private val stepsListener = OnDataPointListener { dataPoint ->
-        for (field in dataPoint.dataType.fields) {
-            val value = dataPoint.getValue(field)
-            val valueCurr = stepsMutable.value
-            Log.i(FIT_TAG, "DataPoint value: $value ; field: ${field.name}")
-            if (valueCurr != null) {
-                stepsMutable.postValue((valueCurr + value.toString().toInt()))
+        try {
+            for (field in dataPoint.dataType.fields) {
+                val value = dataPoint.getValue(field).asInt()
+                val valueCurr = stepsMutable.value
+                Log.i(FIT_TAG, "DataPoint value: $value ; field: ${field.name}")
+                if (valueCurr != null) {
+                    stepsMutable.postValue(valueCurr + value)
+                }
             }
+        }
+        catch (e: IllegalStateException) {
+            //
         }
     }
 
@@ -111,13 +122,18 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
     }
 
     private val caloriesListener = OnDataPointListener { dataPoint ->
-        for (field in dataPoint.dataType.fields) {
-            val value = dataPoint.getValue(field)
-            val valueCurr = caloriesMutable.value
-            Log.i(FIT_TAG, "DataPoint value: $value ; field: ${field.name}")
-            if (valueCurr != null) {
-                caloriesMutable.postValue((valueCurr + value.toString().toInt()))
+        try {
+            for (field in dataPoint.dataType.fields) {
+                val value = dataPoint.getValue(field).asInt()
+                val valueCurr = caloriesMutable.value
+                Log.i(FIT_TAG, "DataPoint value: $value ; field: ${field.name}")
+                if (valueCurr != null) {
+                    caloriesMutable.postValue(valueCurr + value)
+                }
             }
+        }
+        catch (e: IllegalStateException) {
+            //
         }
     }
 
@@ -141,11 +157,59 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
 
     private val distanceListener = OnDataPointListener { dataPoint ->
         for (field in dataPoint.dataType.fields) {
-            val value = dataPoint.getValue(field)
-            val valueCurr = distanceMutable.value
-            Log.i(FIT_TAG, "DataPoint value: $value ; field: ${field.name}")
-            if (valueCurr != null) {
-                distanceMutable.postValue((valueCurr + value.toString().toInt()))
+            try {
+                val value = dataPoint.getValue(field).asInt()
+                val valueCurr = distanceMutable.value
+                Log.i(FIT_TAG, "DataPoint value: $value ; field: ${field.name}")
+                if (valueCurr != null) {
+                    distanceMutable.postValue(valueCurr + value)
+                }
+            }
+            catch (e: IllegalStateException) {
+                //
+            }
+        }
+    }
+
+    fun getAllHistory()
+    {
+        val calendar = Calendar.getInstance()
+        val endTime = calendar.timeInMillis
+        calendar.add(Calendar.YEAR, -2)
+        val startTime = calendar.timeInMillis
+        val readRequest = DataReadRequest.Builder()
+                .aggregate(AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(AGGREGATE_CALORIES_EXPENDED)
+                .aggregate(AGGREGATE_DISTANCE_DELTA)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                .build()
+        Fitness.getHistoryClient(mainActivity, getGoogleAccount())
+            .readData(readRequest)
+            .addOnSuccessListener { dataSets ->
+                Log.v(TAG, "dataSets = ${dataSets.buckets.size}")
+                for (dataSet in dataSets.buckets.flatMap { it.dataSets }) {
+                    Log.v(TAG, "dataPoints = ${dataSet.dataPoints.size}")
+//                    dumpDataSet(dataSet)
+                }
+//                distanceMutable.postValue(total)
+            }
+            .addOnFailureListener {
+                Log.v("TAG", "failed")
+//                distanceMutable.postValue(total)
+            }
+    }
+
+    private val TAG = "GoogleFitDataSource"
+    fun dumpDataSet(dataSet: DataSet) {
+        Log.v(TAG, "Data returned for Data type: ${dataSet.dataType.name}")
+        for (dp in dataSet.dataPoints) {
+            Log.v(TAG,"Data point:")
+            Log.v(TAG,"\tType: ${dp.dataType.name}")
+//            Log.v(TAG,"\tStart: $dp")
+//            Log.v(TAG,"\tEnd: $dp")
+            for (field in dp.dataType.fields) {
+                Log.v(TAG,"\tField: ${field.name.toString()} Value: ${dp.getValue(field)}")
             }
         }
     }

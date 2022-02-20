@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -37,11 +38,12 @@ fun JournalItemDetails(
     val scrollState = rememberScrollState()
     var openDialog by remember { mutableStateOf(false)  }
     var uidRemember by remember { mutableStateOf(uid)  }
+    var time by remember { mutableStateOf("0")  }
 
     val journalDataObject by viewModel.journalDataObject.observeAsState(JournalDataObject())
     if(uidRemember != -1)
         viewModel.getSpecificJournalDataObject(uidRemember)
-
+    val currContext = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,6 +66,7 @@ fun JournalItemDetails(
                 }
             },
             doneClicked = {
+                journalDataObject.journalTime = time
                 viewModel.saveOrUpdateJournalDataObject(journalDataObject) {
                     uidRemember = -1
                     navController.popBackStack()
@@ -76,9 +79,13 @@ fun JournalItemDetails(
             journalDataObject.isHydration = true
             //Hydration
             RowWithDescAndAction(
-                value = "14:44",
+                value = if(time == "0") journalDataObject.journalTime else time,
                 descAction = "Time",
-                fieldClicked = {}
+                fieldClicked = {
+                    viewModel.selectTime(currContext) {
+                        time = it
+                    }
+                }
             )
             Divider(
                 modifier = Modifier.fillMaxWidth(),
