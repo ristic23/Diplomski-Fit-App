@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.common.JournalDataObject
+import com.example.jetpackcomposesvastara.util.Constants
 import com.example.repository.RepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -62,7 +63,7 @@ class JournalItemDetailsViewModel @Inject constructor(
 
     fun selectTime(context: Context, timePicked: (String) -> Unit)
     {
-        val currentDateTime = Calendar.getInstance()
+        val currentDateTime = Constants.euCalendar
         val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
         val startMinute = currentDateTime.get(Calendar.MINUTE)
         TimePickerDialog(

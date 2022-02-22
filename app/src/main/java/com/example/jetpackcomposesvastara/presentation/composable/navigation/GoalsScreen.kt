@@ -1,6 +1,5 @@
 package com.example.jetpackcomposesvastara.presentation.composable.navigation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -19,13 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.common.CalendarDayObject
 import com.example.jetpackcomposesvastara.presentation.composable.general.OneWeekRow
 import com.example.jetpackcomposesvastara.presentation.viewModel.GoalViewModel
 
@@ -37,6 +34,9 @@ fun GoalsScreen() {
     val viewModel: GoalViewModel = hiltViewModel()
 
     val stepDailyGoal by viewModel.stepsLiveData.observeAsState(0)
+    val weekRangeLiveData by viewModel.weekRangeLiveData.observeAsState("")
+
+    val items by viewModel.weekListData.observeAsState(mutableListOf())
 
     val dayNames: List<String> = listOf(
         "MON",
@@ -47,16 +47,6 @@ fun GoalsScreen() {
         "SAT",
         "SUN",
     )
-    val items: List<CalendarDayObject> = listOf(
-        CalendarDayObject(29, false),
-        CalendarDayObject(30, false),
-        CalendarDayObject(1, false),
-        CalendarDayObject(2, true),
-        CalendarDayObject(3, false),
-        CalendarDayObject(4, true),
-        CalendarDayObject(5, true),
-    )
-
 
     Column(
         modifier = Modifier
@@ -190,11 +180,11 @@ fun GoalsScreen() {
                             .aspectRatio(1f)
                             .clip(CircleShape)
                             .clickable {
-                                //todo prev week
+                                viewModel.prevWeek()
                             }
                     )
                     Text(
-                        text = "20.02.2022. - 27.02.2022.",
+                        text = weekRangeLiveData,
                         //            fontSize = 24.sp,
                         color = MaterialTheme.colors.onBackground
                     )
@@ -207,7 +197,7 @@ fun GoalsScreen() {
                             .aspectRatio(1f)
                             .clip(CircleShape)
                             .clickable {
-                                //todo next week
+                                viewModel.nextWeek()
                             }
                     )
                 }
@@ -234,7 +224,9 @@ fun GoalsScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp),
-                    contentPadding = 4.dp)
+                    contentPadding = 4.dp,
+                    dayGoal = stepDailyGoal
+                )
             }
         }
 

@@ -1,11 +1,15 @@
 package com.example.jetpackcomposesvastara.presentation.viewModel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcomposesvastara.data.RepositoryGoogleFitInterface
 import com.example.repository.RepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +25,7 @@ class MainViewModel @Inject constructor(
 
     val distanceLiveData: LiveData<Int> = repositoryGoogleFitInterface.distanceLiveData
 
-    val stepsGoalLiveData: LiveData<Int> = repositoryGoogleFitInterface.goalsStepsLiveData
+    val stepsGoalLiveData = MutableLiveData(0)
 
     init {
 
@@ -31,12 +35,14 @@ class MainViewModel @Inject constructor(
 
         repositoryGoogleFitInterface.getTodayDistance()
 
-        repositoryGoogleFitInterface.readStepsGoals()
+//        repositoryGoogleFitInterface.readStepsGoals()
 
-    }
+        CoroutineScope(Dispatchers.IO).launch {
+            repositoryInterface.currentStepGoalFlow().collect {
+                stepsGoalLiveData.postValue(it)
+            }
+        }
 
-    fun setNewStepGoal(newValue: Int) = viewModelScope.launch {
-        repositoryInterface.setNewStepDailyGoal(newValue)
     }
 
 

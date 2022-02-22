@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.jetpackcomposesvastara.data.*
 import com.example.jetpackcomposesvastara.databinding.FragmentNotificationsBinding
+import com.example.jetpackcomposesvastara.util.Constants
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.fitness.Fitness
@@ -124,7 +125,7 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
 
     private fun requestForHistory()
     {
-        val cal = Calendar.getInstance()
+        val cal = Constants.euCalendar
         cal.time = Date()
         val endTime = cal.timeInMillis
 

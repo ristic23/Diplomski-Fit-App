@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.common.CalendarDayObject
+import com.example.jetpackcomposesvastara.util.Constants
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.fitness.Fitness
@@ -16,6 +18,7 @@ import com.google.android.gms.fitness.request.OnDataPointListener
 import com.google.android.gms.fitness.request.SensorRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.lang.IllegalArgumentException
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -57,7 +60,6 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
                 stepsMutable.postValue(total)
             }
         getDataUsingSensor(TYPE_STEP_COUNT_DELTA, stepsListener)
-        getAllHistory()
     }
 
     private fun subscribeAndRecordData(dataType: DataType) {
@@ -171,49 +173,6 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
         }
     }
 
-    fun getAllHistory()
-    {
-        val calendar = Calendar.getInstance()
-        val endTime = calendar.timeInMillis
-        calendar.add(Calendar.YEAR, -2)
-        val startTime = calendar.timeInMillis
-        val readRequest = DataReadRequest.Builder()
-                .aggregate(AGGREGATE_STEP_COUNT_DELTA)
-                .aggregate(AGGREGATE_CALORIES_EXPENDED)
-                .aggregate(AGGREGATE_DISTANCE_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                .build()
-        Fitness.getHistoryClient(mainActivity, getGoogleAccount())
-            .readData(readRequest)
-            .addOnSuccessListener { dataSets ->
-                Log.v(TAG, "dataSets = ${dataSets.buckets.size}")
-                for (dataSet in dataSets.buckets.flatMap { it.dataSets }) {
-                    Log.v(TAG, "dataPoints = ${dataSet.dataPoints.size}")
-//                    dumpDataSet(dataSet)
-                }
-//                distanceMutable.postValue(total)
-            }
-            .addOnFailureListener {
-                Log.v("TAG", "failed")
-//                distanceMutable.postValue(total)
-            }
-    }
-
-    private val TAG = "GoogleFitDataSource"
-    fun dumpDataSet(dataSet: DataSet) {
-        Log.v(TAG, "Data returned for Data type: ${dataSet.dataType.name}")
-        for (dp in dataSet.dataPoints) {
-            Log.v(TAG,"Data point:")
-            Log.v(TAG,"\tType: ${dp.dataType.name}")
-//            Log.v(TAG,"\tStart: $dp")
-//            Log.v(TAG,"\tEnd: $dp")
-            for (field in dp.dataType.fields) {
-                Log.v(TAG,"\tField: ${field.name.toString()} Value: ${dp.getValue(field)}")
-            }
-        }
-    }
-
     private fun formatValue(value: Value): Int = try {
         Log.v("ValueBefore", "value = $value")
             value.asInt()
@@ -266,5 +225,72 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
             }
             "Every ${recurrence!!.count} $period"
         } ?: "Does not repeat"
+
+
+    private val TAG = "SPECIFIC_WEEK"
+    fun getSpecificWeek(startWeekTime: Long,
+                        endWeekTime: Long,
+                        readingDone: (List<CalendarDayObject>) -> Unit,)
+    {
+        val weekList = mutableListOf<CalendarDayObject>()
+        val readRequest = DataReadRequest.Builder()
+            .aggregate(TYPE_STEP_COUNT_DELTA)
+            .bucketByTime(1, TimeUnit.DAYS)
+            .setTimeRange(
+                startWeekTime,
+                endWeekTime,
+                TimeUnit.MILLISECONDS)
+            .build()
+        Fitness.getHistoryClient(mainActivity, getGoogleAccount())
+            .readData(readRequest)
+            .addOnSuccessListener { dataSets ->
+                Log.v(TAG, "dataPointsBuckets = ${dataSets.buckets.size}")
+                for (dataSet in dataSets.buckets.flatMap { it.dataSets }) {
+                    if(dataSet.dataPoints.isNotEmpty())
+                        weekList.add(dumpDataSet(dataSet))
+                    Log.v(TAG, "/////////////////////////")
+                    Log.v(TAG, "/////////////////////////")
+                }
+                readingDone(weekList)
+            }
+            .addOnFailureListener {
+                Log.v("TAG", "failed")
+                readingDone(listOf())
+            }
+    }
+
+    private fun dumpDataSet(dataSet: DataSet): CalendarDayObject {
+        Log.v(TAG, "Data returned for Data type: ${dataSet.dataType.name}")
+        val dataPoint = dataSet.dataPoints.first()
+        val startTime = dataPoint.getStartTime(TimeUnit.MILLISECONDS)
+        val endTime = dataPoint.getEndTime(TimeUnit.MILLISECONDS)
+        val stepValue = formatValue(dataPoint.getValue(Field.FIELD_STEPS))
+//        for (dp in dataSet.dataPoints) {
+//            Log.v(TAG,"Data point:")
+//            Log.v(TAG,"\tType: ${dp.dataType.name}")
+//            Log.v(TAG,"\tStart: $dp")
+//            Log.v(TAG,"\tEnd: $dp")
+//            for (field in dp.dataType.fields) {
+//                Log.v(TAG,"\tField: ${field.name.toString()} Value: ${dp.getValue(field)}")
+//            }
+//        }
+        val calendar = Constants.euCalendar
+        calendar.timeInMillis = startTime
+        val startDate = calendar.get(Calendar.DAY_OF_MONTH)
+        Log.v(TAG, "startDayInWeek - ${calendar.get(Calendar.DAY_OF_WEEK)}")
+        Log.v(TAG, "startDate - $startDate")
+
+        calendar.timeInMillis = endTime
+        val endDate = calendar.get(Calendar.DAY_OF_MONTH)
+        Log.v(TAG, "endDayInWeek - ${calendar.get(Calendar.DAY_OF_WEEK)}")
+        Log.v(TAG, "endDate - $endDate")
+        Log.v(TAG, "stepValue - $stepValue")
+
+        return CalendarDayObject(day = startDate, stepAchieved = stepValue)
+    }
+
+
+
+
 
 }

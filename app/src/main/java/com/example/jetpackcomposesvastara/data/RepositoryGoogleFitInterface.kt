@@ -1,6 +1,7 @@
 package com.example.jetpackcomposesvastara.data
 
 import androidx.lifecycle.LiveData
+import com.example.common.CalendarDayObject
 
 interface RepositoryGoogleFitInterface
 {
@@ -20,5 +21,6 @@ interface RepositoryGoogleFitInterface
 
     fun readStepsGoals()
 
+    fun getSpecificWeek(startWeekTime: Long, endWeekTime: Long, readingDone: (List<CalendarDayObject>) -> Unit)
 
 }

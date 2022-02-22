@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.common.JournalDataObject
 import com.example.jetpackcomposesvastara.presentation.composable.journals.RowJournalDesc
 import com.example.jetpackcomposesvastara.presentation.composable.journals.formatDate
+import com.example.jetpackcomposesvastara.util.Constants
 import java.util.*
 
 
@@ -109,7 +110,7 @@ fun JournalWorkoutCardPreview()
         hydrationDrinkName = "",
         activityStringValue = "Arm Wrestling",
         calProgress = 127,
-        date = Calendar.getInstance().time
+        date = Constants.euCalendar.time
     )
     Card(
         shape = RoundedCornerShape(10.dp),

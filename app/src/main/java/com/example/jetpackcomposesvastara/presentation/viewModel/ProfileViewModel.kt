@@ -10,13 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.Gender
 import java.util.*
 import com.example.jetpackcomposesvastara.presentation.composable.util.Date
+import com.example.jetpackcomposesvastara.util.Constants
 import com.example.repository.RepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.Calendar.getInstance
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,9 +29,9 @@ class ProfileViewModel @Inject constructor(
     var lastNameLiveData = MutableLiveData("")
     var genderLiveData = MutableLiveData(Gender.Male)
     var birthdayLiveData = MutableLiveData(Date(
-        getInstance().get(Calendar.DAY_OF_MONTH),
-        getInstance().get(Calendar.MONTH) + 1,
-        getInstance().get(Calendar.YEAR),
+        Constants.euCalendar.get(Calendar.DAY_OF_MONTH),
+        Constants.euCalendar.get(Calendar.MONTH) + 1,
+        Constants.euCalendar.get(Calendar.YEAR),
     ).toString())
     var weightLiveData = MutableLiveData(0)
     var heightLiveData = MutableLiveData(0)
@@ -102,7 +102,7 @@ class ProfileViewModel @Inject constructor(
     fun selectDateTime(context: Context,
                        newDateIsPicked: (String) -> Unit)
     {
-        val currentDateTime = getInstance()
+        val currentDateTime = Constants.euCalendar
         val startYear = currentDateTime.get(Calendar.YEAR)
         val startMonth = currentDateTime.get(Calendar.MONTH)
         val startDay = currentDateTime.get(Calendar.DAY_OF_MONTH)

@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.common.JournalDataObject
+import com.example.jetpackcomposesvastara.util.Constants
 import java.util.*
 
 @Composable
@@ -111,7 +112,7 @@ fun RowJournalDesc(
 
 fun formatDate(date: Date): String
 {
-    val calendar = Calendar.getInstance()
+    val calendar = Constants.euCalendar
     calendar.time = date
     return String.format(Locale.ROOT, "%02d.%02d.%02d",
         calendar.get(Calendar.DAY_OF_MONTH),
@@ -134,7 +135,7 @@ fun JournalHydrationCardPreview()
         stepsProgress = 0,
         calProgress = 0,
         kmProgress = 0f,
-        date = Calendar.getInstance().time
+        date = Constants.euCalendar.time
     )
     Card(
         shape = RoundedCornerShape(10.dp),
