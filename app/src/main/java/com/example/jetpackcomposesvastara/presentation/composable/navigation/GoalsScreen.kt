@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcomposesvastara.presentation.composable.general.GoalStreakAndRecordCard
 import com.example.jetpackcomposesvastara.presentation.composable.general.OneWeekRow
 import com.example.jetpackcomposesvastara.presentation.viewModel.GoalViewModel
 
@@ -37,6 +38,9 @@ fun GoalsScreen() {
     val weekRangeLiveData by viewModel.weekRangeLiveData.observeAsState("")
 
     val items by viewModel.weekListData.observeAsState(mutableListOf())
+
+    val currStreak by viewModel.currStreakLiveData.observeAsState(initial = 0)
+    val allTimeRecord by viewModel.allTimeRecordLiveData.observeAsState(initial = 0)
 
     val dayNames: List<String> = listOf(
         "MON",
@@ -80,66 +84,7 @@ fun GoalsScreen() {
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        Card(
-            shape = RoundedCornerShape(10.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(6.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = "Daily stats",
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colors.onBackground,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-                /**Week and arrows indicator*/
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                        .padding(start = 20.dp, end = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Daily current streak",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                    Text(
-                        text = "4",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                        .padding(start = 20.dp, end = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Daily record",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                    Text(
-                        text = "7",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colors.onBackground
-                    )
-                }
-            }
-        }
+        GoalStreakAndRecordCard(currStreak = currStreak, allTimeRecord = allTimeRecord)
 
         Spacer(modifier = Modifier.height(20.dp))
 

@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.jetpackcomposesvastara.R
 import com.example.jetpackcomposesvastara.presentation.composable.LinearProgressBar
+import com.example.jetpackcomposesvastara.presentation.composable.general.GoalStreakAndRecordCard
 import com.example.jetpackcomposesvastara.presentation.viewModel.MainViewModel
 import com.example.jetpackcomposesvastara.util.Constants.cardElevation
 import com.example.jetpackcomposesvastara.util.Constants.largeRoundedCorner
@@ -27,10 +28,15 @@ fun HomeScreen() {
 
 //    val viewModel = viewModel(MainViewModel::class.java)
 
+    val currStreak by viewModel.currStreakLiveData.observeAsState(initial = 0)
+    val allTimeRecord by viewModel.allTimeRecordLiveData.observeAsState(initial = 0)
+
     Column(
         modifier = Modifier.verticalScroll(scrollState)
     ) {
         CurrentProgressCard(viewModel)
+
+        GoalStreakAndRecordCard(currStreak = currStreak, allTimeRecord = allTimeRecord)
     }
 
 }
@@ -48,7 +54,7 @@ fun CurrentProgressCard(viewModel: MainViewModel) {
             shape = RoundedCornerShape(largeRoundedCorner),
             elevation = cardElevation,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+                .padding(start = 10.dp, end = 10.dp, top = 20.dp),
             color = MaterialTheme.colors.surface)
         {
             Column {
@@ -69,7 +75,7 @@ fun CurrentProgressCard(viewModel: MainViewModel) {
             shape = RoundedCornerShape(largeRoundedCorner),
             elevation = cardElevation,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp),
             color = MaterialTheme.colors.surface)
         {
             Column {
@@ -90,7 +96,7 @@ fun CurrentProgressCard(viewModel: MainViewModel) {
             shape = RoundedCornerShape(largeRoundedCorner),
             elevation = cardElevation,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp, top = 10.dp),
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp),
             color = MaterialTheme.colors.surface)
         {
             Column {

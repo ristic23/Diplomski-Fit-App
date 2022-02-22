@@ -10,17 +10,16 @@
     <color name="GreenAccent">#FF08FF04</color>
 
     <color name="progress_bg">#CC323232</color>
-    <color name="steps_progress">#177BA3</color>
-    <color name="cal_progress">#B86C32</color>
-    <color name="distance_progress">#3AA85A</color>
-    <color name="progress_text_color">#566E82</color>
+    <color name="steps_progress">#3498db</color>
+    <color name="cal_progress">#e67e22</color>
+    <color name="distance_progress">#27ae60</color>
 
     <color name="IconWhite">#FFEEEEEE</color>
 
 
-    <color name="done_btn_color">#3AA85A</color>
-    <color name="delete_btn_color">#B13939</color>
+    <color name="done_btn_color">#27ae60</color>
+    <color name="delete_btn_color">#c0392b</color>
 
-        <color name="transparent">#00B13939</color>
+    <color name="transparent">#00B13939</color>
 
 </resources>

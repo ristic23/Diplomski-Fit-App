@@ -8,6 +8,4 @@ object Constants {
     val largeRoundedCorner = 8.dp
     val cardElevation = 8.dp
 
-    val euCalendar: Calendar = Calendar.getInstance(Locale.GERMANY)
-
 }

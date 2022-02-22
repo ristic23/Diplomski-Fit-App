@@ -95,10 +95,22 @@ class Repository @Inject constructor(
         dataStoreManager.setNewHeight(newValue)
     }
 
-    override fun currentLastTimeUpdateIsDoneFlow(): Flow<String> = dataStoreManager.currentLastTimeUpdateIsDoneFlow
+    override fun currentLastTimeUpdateIsDoneFlow(): Flow<Long> = dataStoreManager.currentLastTimeUpdateIsDoneFlow
 
-    override suspend fun setNewLastTimeUpdateIsDone(newValue: String) {
+    override suspend fun setNewLastTimeUpdateIsDone(newValue: Long) {
         dataStoreManager.setNewLastTimeUpdateIsDone(newValue)
+    }
+
+    override fun currentStreakFlow(): Flow<Int>  = dataStoreManager.currentStreakFlow
+
+    override suspend fun setCurrStreak(newValue: Int) {
+        dataStoreManager.setCurrStreak(newValue)
+    }
+
+    override fun allTimeRecordFlow(): Flow<Int>  = dataStoreManager.allTimeRecordFlow
+
+    override suspend fun setAllTimeRecord(newValue: Int) {
+        dataStoreManager.setAllTimeRecord(newValue)
     }
 
     //endregion

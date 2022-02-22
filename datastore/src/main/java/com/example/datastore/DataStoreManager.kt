@@ -23,8 +23,9 @@ const val KEY_PROFILE_BIRTHDAY = "KEY_PROFILE_BIRTHDAY"
 const val KEY_PROFILE_WEIGHT = "KEY_PROFILE_WEIGHT"
 const val KEY_PROFILE_HEIGHT = "KEY_PROFILE_HEIGHT"
 
-const val KEY_TIME_OF_LAST_GOAL_DB_UPDATE = "KEY_TIME_OF_LAST_GOAL_DB_UPDATE" // hh.mm.day.month.year
-
+const val KEY_TIME_OF_LAST_GOAL_DB_UPDATE = "KEY_TIME_OF_LAST_GOAL_DB_UPDATE" // time in millis
+const val KEY_CURR_STREAK = "KEY_CURR_STREAK"
+const val KEY_ALL_TIME_RECORD = "KEY_ALL_TIME_RECORD"
 
 private val Context.risticFitDataStore: DataStore<Preferences> by preferencesDataStore(name = DATA_STORE_NAME)
 
@@ -42,7 +43,10 @@ class DataStoreManager @Inject constructor(@ApplicationContext context: Context)
         val WEIGHT : Preferences.Key<Int> = intPreferencesKey(KEY_PROFILE_WEIGHT)
         val HEIGHT : Preferences.Key<Int> = intPreferencesKey(KEY_PROFILE_HEIGHT)
 
-        val TIME_LAST_GOAL_UPDATE : Preferences.Key<String> = stringPreferencesKey(KEY_TIME_OF_LAST_GOAL_DB_UPDATE)
+        val CURR_STREAK : Preferences.Key<Int> = intPreferencesKey(KEY_CURR_STREAK)
+        val ALL_TIME_RECORD : Preferences.Key<Int> = intPreferencesKey(KEY_ALL_TIME_RECORD)
+
+        val TIME_LAST_GOAL_UPDATE : Preferences.Key<Long> = longPreferencesKey(KEY_TIME_OF_LAST_GOAL_DB_UPDATE)
 
     }
 
@@ -161,21 +165,49 @@ class DataStoreManager @Inject constructor(@ApplicationContext context: Context)
         preference[HEIGHT] ?: 0
     }
 
-    suspend fun setNewLastTimeUpdateIsDone(name: String) {
+    suspend fun setNewLastTimeUpdateIsDone(time: Long) {
         risticDataStore.edit {
-            it[TIME_LAST_GOAL_UPDATE] = name
+            it[TIME_LAST_GOAL_UPDATE] = time
         }
     }
 
-    val currentLastTimeUpdateIsDoneFlow: Flow<String> = risticDataStore.data.catch {
+    val currentLastTimeUpdateIsDoneFlow: Flow<Long> = risticDataStore.data.catch {
         if(it is IOException)
             emit(emptyPreferences())
         else
             throw(it)
     }.map { preference ->
-        preference[TIME_LAST_GOAL_UPDATE] ?: ""
+        preference[TIME_LAST_GOAL_UPDATE] ?: -1L
     }
 
+    suspend fun setCurrStreak(name: Int) {
+        risticDataStore.edit {
+            it[CURR_STREAK] = name
+        }
+    }
 
+    val currentStreakFlow: Flow<Int> = risticDataStore.data.catch {
+        if(it is IOException)
+            emit(emptyPreferences())
+        else
+            throw(it)
+    }.map { preference ->
+        preference[CURR_STREAK] ?: 0
+    }
+
+    suspend fun setAllTimeRecord(name: Int) {
+        risticDataStore.edit {
+            it[ALL_TIME_RECORD] = name
+        }
+    }
+
+    val allTimeRecordFlow: Flow<Int> = risticDataStore.data.catch {
+        if(it is IOException)
+            emit(emptyPreferences())
+        else
+            throw(it)
+    }.map { preference ->
+        preference[ALL_TIME_RECORD] ?: 0
+    }
 
 }

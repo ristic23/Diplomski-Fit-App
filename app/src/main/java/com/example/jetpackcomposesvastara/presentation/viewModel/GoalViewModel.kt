@@ -30,6 +30,9 @@ class GoalViewModel @Inject constructor(
 
     var weekListData = MutableLiveData<MutableList<CalendarDayObject>>(mutableListOf())
 
+    val currStreakLiveData = MutableLiveData(0)
+    val allTimeRecordLiveData = MutableLiveData(0)
+
     init {
         CoroutineScope(Dispatchers.IO).launch {
             repository.currentStepGoalFlow().collect {
@@ -88,8 +91,7 @@ class GoalViewModel @Inject constructor(
         val tempTodayCalendar = Calendar.getInstance(Locale.GERMANY)
         endCalendar.add(Calendar.DAY_OF_MONTH, 1)
         if(
-            tempTodayCalendar.get(Calendar.MONTH) == endCalendar.get(Calendar.MONTH) &&
-            tempTodayCalendar.get(Calendar.DAY_OF_MONTH) >= endCalendar.get(Calendar.DAY_OF_MONTH)
+            endCalendar.time.before(tempTodayCalendar.time)
         ) {
             startCalendar.timeInMillis = endCalendar.timeInMillis
             endCalendar.add(Calendar.DAY_OF_MONTH, 6)

@@ -53,8 +53,14 @@ interface RepositoryInterface
     fun currentHeightFlow() : Flow<Int>
     suspend fun setNewHeight(newValue: Int)
 
-    fun currentLastTimeUpdateIsDoneFlow() : Flow<String>
-    suspend fun setNewLastTimeUpdateIsDone(newValue: String)
+    fun currentLastTimeUpdateIsDoneFlow() : Flow<Long>
+    suspend fun setNewLastTimeUpdateIsDone(newValue: Long)
+
+    fun currentStreakFlow() : Flow<Int>
+    suspend fun setCurrStreak(newValue: Int)
+
+    fun allTimeRecordFlow() : Flow<Int>
+    suspend fun setAllTimeRecord(newValue: Int)
 
     //endregion
 

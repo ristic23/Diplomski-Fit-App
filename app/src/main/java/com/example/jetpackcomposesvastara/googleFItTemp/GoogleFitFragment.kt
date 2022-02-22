@@ -125,7 +125,7 @@ class GoogleFitFragment : Fragment(), OnSuccessListener<Any>
 
     private fun requestForHistory()
     {
-        val cal = Constants.euCalendar
+        val cal = Calendar.getInstance(Locale.GERMANY)
         cal.time = Date()
         val endTime = cal.timeInMillis
 

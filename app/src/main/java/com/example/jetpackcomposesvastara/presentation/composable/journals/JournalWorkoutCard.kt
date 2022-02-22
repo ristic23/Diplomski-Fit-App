@@ -110,7 +110,7 @@ fun JournalWorkoutCardPreview()
         hydrationDrinkName = "",
         activityStringValue = "Arm Wrestling",
         calProgress = 127,
-        date = Constants.euCalendar.time
+        date = Calendar.getInstance(Locale.GERMANY).time
     )
     Card(
         shape = RoundedCornerShape(10.dp),

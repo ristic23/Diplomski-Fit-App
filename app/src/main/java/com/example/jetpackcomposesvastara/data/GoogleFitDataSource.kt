@@ -274,7 +274,7 @@ class GoogleFitDataSource(@ApplicationContext private val mainActivity: Context)
 //                Log.v(TAG,"\tField: ${field.name.toString()} Value: ${dp.getValue(field)}")
 //            }
 //        }
-        val calendar = Constants.euCalendar
+        val calendar = Calendar.getInstance(Locale.GERMANY)
         calendar.timeInMillis = startTime
         val startDate = calendar.get(Calendar.DAY_OF_MONTH)
         Log.v(TAG, "startDayInWeek - ${calendar.get(Calendar.DAY_OF_WEEK)}")

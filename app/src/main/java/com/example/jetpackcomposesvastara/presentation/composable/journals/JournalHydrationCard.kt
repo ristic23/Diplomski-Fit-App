@@ -112,7 +112,7 @@ fun RowJournalDesc(
 
 fun formatDate(date: Date): String
 {
-    val calendar = Constants.euCalendar
+    val calendar = Calendar.getInstance(Locale.GERMANY)
     calendar.time = date
     return String.format(Locale.ROOT, "%02d.%02d.%02d",
         calendar.get(Calendar.DAY_OF_MONTH),
@@ -135,7 +135,7 @@ fun JournalHydrationCardPreview()
         stepsProgress = 0,
         calProgress = 0,
         kmProgress = 0f,
-        date = Constants.euCalendar.time
+        date = Calendar.getInstance(Locale.GERMANY).time
     )
     Card(
         shape = RoundedCornerShape(10.dp),

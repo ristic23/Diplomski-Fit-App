@@ -63,7 +63,7 @@ class JournalItemDetailsViewModel @Inject constructor(
 
     fun selectTime(context: Context, timePicked: (String) -> Unit)
     {
-        val currentDateTime = Constants.euCalendar
+        val currentDateTime = Calendar.getInstance(Locale.GERMANY)
         val startHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
         val startMinute = currentDateTime.get(Calendar.MINUTE)
         TimePickerDialog(

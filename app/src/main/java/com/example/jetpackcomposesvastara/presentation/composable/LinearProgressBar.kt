@@ -88,7 +88,7 @@ fun PreviewLinearProgressbar() {
         progressText = "6/10",
         progressColor = colorResource(id = R.color.steps_progress),
         bgColor = colorResource(id = R.color.progress_bg),
-        textColor = colorResource(id = R.color.progress_text_color),
+        textColor = colorResource(id = R.color.steps_progress),
         text = "Steps",
         true
     )
