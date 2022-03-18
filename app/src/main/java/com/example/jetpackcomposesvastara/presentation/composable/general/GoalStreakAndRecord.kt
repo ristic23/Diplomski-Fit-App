@@ -29,7 +29,7 @@ fun GoalStreakAndRecordCard(
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Daily stats",
+                text = "Daily records",
                 fontSize = 18.sp,
                 color = MaterialTheme.colors.onBackground,
                 modifier = Modifier
@@ -46,7 +46,7 @@ fun GoalStreakAndRecordCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Current streak",
+                    text = "Current record",
                     fontSize = 14.sp,
                     color = MaterialTheme.colors.onBackground
                 )

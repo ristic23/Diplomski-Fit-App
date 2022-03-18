@@ -12,7 +12,9 @@ import com.example.repository.RepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -30,8 +32,12 @@ class GoalViewModel @Inject constructor(
 
     var weekListData = MutableLiveData<MutableList<CalendarDayObject>>(mutableListOf())
 
+    private val stepsGoalLiveData = MutableLiveData(0)
+
     val currStreakLiveData = MutableLiveData(0)
     val allTimeRecordLiveData = MutableLiveData(0)
+    private var currentStreak = 0
+    private var allTimeRecord = 0
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
@@ -50,6 +56,25 @@ class GoalViewModel @Inject constructor(
         setStartDayTime(startCalendar)
         startCalendar.add(Calendar.DAY_OF_MONTH, -initBackDays)
         getStepsForWeek()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.currentStreakFlow().collect {
+                currentStreak = it
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.allTimeRecordFlow().collect {
+                allTimeRecord = it
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.currentStepGoalFlow().collect {
+                stepsGoalLiveData.postValue(it)
+                readLastDayUpdate()
+            }
+        }
     }
 
     private val TAG = "LOG_GOAL_WEEK"
@@ -136,4 +161,100 @@ class GoalViewModel @Inject constructor(
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 1)
     }
+
+
+    private fun readLastDayUpdate()
+    {
+        CoroutineScope(Dispatchers.IO).launch {
+            val lastUpdateMillis = repository.currentLastTimeUpdateIsDoneFlow().first()
+
+            if(lastUpdateMillis == -1L)
+            {
+                //First use calculate last 1 year
+                val calendar = Calendar.getInstance(Locale.GERMANY)
+                val endTime = calendar.timeInMillis
+                calendar.add(Calendar.YEAR, -1)
+                val startTime = calendar.timeInMillis
+                repositoryGoogleFitInterface.getSpecificWeek(
+                    startWeekTime = startTime,
+                    endWeekTime = endTime,
+                    readingDone = { list ->
+                        val currentStepGoal = stepsGoalLiveData.value ?: 5000
+                        var max = 0
+                        var currentMax = 0
+
+                        list.forEach { dayObject ->
+                            if(dayObject.stepAchieved >= currentStepGoal)
+                            {
+                                currentMax++
+                                if(currentMax > max)
+                                    max++
+                            }
+                            else
+                                currentMax = 0
+                        }
+                        currStreakLiveData.postValue(currentMax)
+                        allTimeRecordLiveData.postValue(max)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            repository.setCurrStreak(currentMax)
+                            repository.setAllTimeRecord(max)
+                        }
+                    }
+                )
+            }
+            else
+            {
+                //Check to see if update needed
+                val calendar = Calendar.getInstance(Locale.GERMANY)
+                val lastUpdateCalendar = Calendar.getInstance(Locale.GERMANY)
+                lastUpdateCalendar.timeInMillis = lastUpdateMillis
+                if(calendar.before(lastUpdateCalendar))
+                {
+                    repositoryGoogleFitInterface.getSpecificWeek(
+                        startWeekTime = lastUpdateCalendar.timeInMillis,
+                        endWeekTime = calendar.timeInMillis,
+                        readingDone = { list ->
+                            val currentStepGoal = stepsGoalLiveData.value ?: 5000
+                            var max = 0
+                            var currentMax = 0
+
+                            list.forEach { dayObject ->
+                                if(dayObject.stepAchieved >= currentStepGoal)
+                                {
+                                    currentMax++
+                                    if(currentMax > max)
+                                        max++
+                                }
+                                else
+                                    currentMax = 0
+                            }
+
+                            currStreakLiveData.postValue(if(currentMax > currentStreak) currentMax else currentStreak)
+                            allTimeRecordLiveData.postValue(if(max > allTimeRecord) max else allTimeRecord)
+
+                            CoroutineScope(Dispatchers.IO).launch {
+                                if (currentMax > currentStreak)
+                                    repository.setCurrStreak(currentMax)
+                                if (max > allTimeRecord)
+                                    repository.setAllTimeRecord(max)
+                            }
+                        }
+                    )
+                }
+                else
+                {
+                    currStreakLiveData.postValue(currentStreak)
+                    allTimeRecordLiveData.postValue(allTimeRecord)
+                }
+            }
+
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(200)
+            val calendar = Calendar.getInstance(Locale.GERMANY)
+            calendar.add(Calendar.MINUTE, -5)
+            repository.setNewLastTimeUpdateIsDone(calendar.timeInMillis)
+        }
+    }
+
 }
