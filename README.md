@@ -24,14 +24,14 @@ Shows daily progress, current streak and all time record in successive days comp
 ## Goals
 You can change daily goal, see current streak and all time record, and daily history in weekly format, with indication if goal is completed for that day.
 
-<img src="app/src/main/res/drawable/goal.png" width="180" height="374">
+<img src="app/src/main/res/drawable/goal.jpg" width="180" height="374">
 
 ## Journal
 Displayes two type of data, hydration and workout. There is filter in top part of screen, at bottom right corner is FAB to add new entrie with sub menu for you to pick hydration or workout entrie. 
 
-<img src="app/src/main/res/drawable/journal_1.png" width="180" height="374"> <img src="app/src/main/res/drawable/journal_2.png" width="180" height="374"> <img src="app/src/main/res/drawable/journal_3.png" width="180" height="374"> <img src="app/src/main/res/drawable/journal_4.png" width="180" height="374"> <img src="app/src/main/res/drawable/journal_5.png" width="180" height="374"> <img src="app/src/main/res/drawable/journal_6.png" width="180" height="374"> <img src="app/src/main/res/drawable/journal_7.png" width="180" height="374"> 
+<img src="app/src/main/res/drawable/journal_1.jpg" width="180" height="374"> <img src="app/src/main/res/drawable/journal_2.jpg" width="180" height="374"> <img src="app/src/main/res/drawable/journal_3.jpg" width="180" height="374"> <img src="app/src/main/res/drawable/journal_4.jpg" width="180" height="374"> <img src="app/src/main/res/drawable/journal_5.jpg" width="180" height="374"> <img src="app/src/main/res/drawable/journal_6.jpg" width="180" height="374"> <img src="app/src/main/res/drawable/journal_7.jpg" width="180" height="374"> 
 
 ## Profile
 
-<img src="app/src/main/res/drawable/profile_1.png" width="180" height="374">  <img src="app/src/main/res/drawable/profile_2.png" width="180" height="374"> 
+<img src="app/src/main/res/drawable/profile_1.jpg" width="180" height="374">  <img src="app/src/main/res/drawable/profile_2.jpg" width="180" height="374"> 
 
