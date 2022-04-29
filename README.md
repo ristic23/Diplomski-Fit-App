@@ -18,7 +18,8 @@
 
 ## Home
 Shows daily progress, current streak and all time record in successive days completing daily goal.
-![My Remote Image](https://drive.google.com/file/d/1GlQ5QZjQ8VxkYshgALWW1j1oqMdF1jvF/view?usp=sharing)
+
+![Home Image](https://drive.google.com/file/d/1GlQ5QZjQ8VxkYshgALWW1j1oqMdF1jvF/view?usp=sharing)
 
 ## Goals
 You can change daily goal, see current streak and all time record, and daily history in weekly format, with indication if goal is completed for that day.
