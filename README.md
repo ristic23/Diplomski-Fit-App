@@ -19,7 +19,7 @@
 ## Home
 Shows daily progress, current streak and all time record in successive days completing daily goal.
 
-![Home Image](app/src/main/res/drawable/home.png)
+<img src="app/src/main/res/drawable/home.png" width="180" height="374">
 
 ## Goals
 You can change daily goal, see current streak and all time record, and daily history in weekly format, with indication if goal is completed for that day.
